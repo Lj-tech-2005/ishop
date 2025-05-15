@@ -1,13 +1,14 @@
 'use client'
 import { axiosApiInstance, notify } from "@/app/library/helper";
-import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { use } from "react";
 
 
 
 export default function productPage({ params }) {
 
+    const param = use(params)
+    const productid = param?.product_id
 
     const submithandler = (e) => {
         e.preventDefault();
@@ -17,19 +18,24 @@ export default function productPage({ params }) {
             formdata.append("images", image);
         }
 
-        axios.post(`http://localhost:5000/product/multi-images/${params?.product_id}`, formdata)
-            .then((response) => {
-                notify(response.data.msg, response.data.flag);
-                if (response.data.flag === 1) {
-                    console.log("hhhhhh")
-                    console.log(response);
+        axiosApiInstance.post(`product/multi-images/${productid}`,formdata).then(
+
+            (res) => {
+            
+                notify(res.data.msg, res.data.flag)
+                if (res.data.flag === 1) {
+                    e.target.reset()
                 }
-            })
-            .catch((err) => {
-                console.log("jjjjjjj")
+            }
+        ).catch(
+            (err) => {
                 console.log(err)
-                notify("Something went wrong", 0);
-            });
+                notify("something went is wrong", 0)
+
+            }
+
+        )
+
     };
 
     return (

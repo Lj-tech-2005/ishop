@@ -1,4 +1,6 @@
 'use client';
+import { axiosApiInstance } from '@/app/library/helper';
+import { useRouter } from 'next/navigation';
 import {
   FaBars,
   FaEnvelope,
@@ -9,6 +11,17 @@ import {
 } from 'react-icons/fa';
 
 export default function Header() {
+
+  const router = useRouter()
+  const logouthandler = (e) => {
+
+    e.preventDefault();
+    axiosApiInstance.get("admin/logout", { withCredentials: true })
+    router.push("/admin-login")
+  }
+
+
+
   return (
     <header className=" bg-[#2b3e4e] fixed top-0 z-10 w-[85%]   text-gray-300 px-4 pe-35   py-3 flex">
       {/* Left section */}
@@ -23,10 +36,10 @@ export default function Header() {
         />
       </div>
 
-      {/* Center */}
+      {/* Center
       <div className="hidden md:block text-sm text-gray-400 mx-auto">
         Welcome to <span className="text-white font-medium">INSPINIA+ Admin Theme</span>.
-      </div>
+      </div> */}
 
       {/* Right section */}
       <div className="flex items-center space-x-6 text-lg">
@@ -45,7 +58,9 @@ export default function Header() {
         </div>
 
         <FaCog className="cursor-pointer" />
-        <div className="flex items-center gap-1 cursor-pointer text-sm">
+        <div
+          onClick={logouthandler}
+          className="flex items-center gap-1 cursor-pointer text-sm">
           <FaSignOutAlt />
           <span>Log out</span>
         </div>

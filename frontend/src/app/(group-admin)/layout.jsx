@@ -1,5 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import "@/app/(group-admin)/globals.css";
+import '../globals.css';
 import SideMenu from "@/components/admin/SideMenu";
 import Header from "@/components/admin/Header";
 import { ToastContainer, toast } from 'react-toastify';

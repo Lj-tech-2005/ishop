@@ -1,6 +1,6 @@
 'use client'
 
-import { axiosApiInstance, notify } from '@/app/library/helper'
+import { axiosApiInstance, getCookies, notify } from '@/app/library/helper'
 import React from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -8,9 +8,19 @@ import { useRouter } from 'next/navigation'
 export default function Status({ Status, statusUrl }) {
 
 
+    const token = (getCookies("admin_token"))
     const router = useRouter()
     const statushandler = () => {
-        axiosApiInstance.patch(statusUrl).then(
+
+        axiosApiInstance.patch(statusUrl, null, {
+
+            headers: {
+
+                Authorization: token ?? ""
+
+            }
+
+        }).then(
             (response) => {
 
                 notify(response.data.msg, response.data.flag)

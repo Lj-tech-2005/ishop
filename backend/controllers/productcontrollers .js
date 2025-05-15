@@ -1,4 +1,4 @@
-const { console } = require("inspector");
+
 const { genrateUniqueName } = require("../helper");
 const productmodel = require("../models/productmodels ");
 const fs = require("fs");
@@ -175,17 +175,12 @@ const productconntroller = {
 
     },
     async multiimages(req, res) {
-        console.log(req.params.id,"myid");
-        console.log(req.files,"my files")
-return
 
         try {
 
             const id = req.params.id;
-            const images = req.files.image;
+            const images = req.files.images;
 
-            console.log(id)
-            console.log(image)
 
             const product = await productmodel.findById(id);
 
@@ -197,7 +192,7 @@ return
             let uploadPromise = [];
 
             for (let image of images) {
-                const img = generateUniqueName(image.name);
+                const img = genrateUniqueName(image.name);
                 const desntinationPath = `./public/images/product/${img}`;
                 allimages.push(img);
                 uploadPromise.push(image.mv(desntinationPath));
@@ -219,41 +214,84 @@ return
             res.send({ msg: "Internal Server Error", flag: 0 });
         }
 
+    },
+    async update(req, res) {
+        try {
+            const id = req.params.id;
+            const {
+                name,
+                slug,
+                shortDescription,
+                longDescription,
+                originalPrice,
+                discountPercentage,
+                finalPrice,
+                categoryId,
+                colors
+            } = req.body;
+
+            const file = req.files?.thumbnail;
+
+            const product = await productmodel.findById(id);
+            if (!product) {
+                return res.status(404).send({ msg: 'Product not found', flag: 0 });
+            }
+
+            let updatedData = {
+                name,
+                slug,
+                shortDescription,
+                longDescription,
+                originalPrice,
+                discountPercentage,
+                finalPrice,
+                categoryId,
+                colors: JSON.parse(colors) // make sure to parse if sent as string
+            };
+
+            if (file) {
+                const imageName = genrateUniqueName(file.name);
+                const destination = `./public/images/product/${imageName}`;
+
+                file.mv(destination, async (err) => {
+                    if (err) {
+                        return res.status(500).send({ msg: 'Unable to upload image', flag: 0 });
+                    }
+
+                    // Delete old image
+                    const oldImagePath = `./public/images/product/${product.thumbnail}`;
+                    if (fs.existsSync(oldImagePath)) {
+                        try {
+                            fs.unlinkSync(oldImagePath);
+                        } catch (unlinkErr) {
+                            console.error('Failed to delete old image:', unlinkErr);
+                        }
+                    }
+
+                    updatedData.thumbnail = imageName;
+
+                    try {
+                        await productmodel.findByIdAndUpdate(id, updatedData);
+                        return res.send({ msg: 'Product updated successfully', flag: 1 });
+                    } catch (updateErr) {
+                        console.error(updateErr);
+                        return res.status(500).send({ msg: 'Unable to update product', flag: 0 });
+                    }
+                });
+            } else {
+                await productmodel.findByIdAndUpdate(id, updatedData);
+                return res.send({ msg: 'Product updated successfully', flag: 1 });
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).send({ msg: 'Internal Server Error', flag: 0 });
+        }
     }
 
-    // async update(req, res) {
-
-    //     try {
-    //         const id = req.params.id
-    //         await categorymodel.findByIdAndUpdate(
-    //             {
-    //                 _id: id
-    //             },
-    //             {
-    //                 name: req.body.name,
-    //                 slug: req.body.slug
-    //             }
-    //         ).then(
-    //             () => {
-
-    //                 res.send({ msg: "category update successfully", flag: 1 });
-    //             }
-    //         ).catch(
-    //             (error) => {
-
-    //                 console.log(error)
-    //                 res.send({ msg: "unable to update category", flag: 0 });
-    //             }
-    //         )
-
-    //     } catch {
-    //         res.status(500).send({ msg: 'Internal Server Error', flag: 0 });
-    //     }
-
-
-    // }
 
 }
+
+
 
 
 module.exports = productconntroller

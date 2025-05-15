@@ -1,7 +1,7 @@
 
 'use client'
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { axiosApiInstance, createSlug, notify } from "@/app/library/helper";
 import { useRouter } from 'next/navigation'
@@ -11,6 +11,8 @@ import { getColor } from "@/app/library/api-call";
 
 const ColorEdit = ({ params }) => {
 
+    const param = use(params)
+    const colorid =param?.color_id
     const router = useRouter()
     const [colors, setcolors] = useState({})
 
@@ -28,14 +30,14 @@ const ColorEdit = ({ params }) => {
     const submithandler = (e) => {
 
         e.preventDefault();
-        
+
         const data = {
             name: nameref.current.value,
             slug: slugref.current.value,
             Hexcode: Hexref.current.value
         }
 
-        axiosApiInstance.put(`color/update/${params?.color_id}`, data).then(
+        axiosApiInstance.put(`color/update/${colorid}`, data).then(
             (res) => {
                 notify(res.data.msg, res.data.flag)
                 if (res.data.flag === 1) {
@@ -56,12 +58,12 @@ const ColorEdit = ({ params }) => {
     useEffect(
         () => {
             const fetchColor = async () => {
-                const colorJSON = await getColor(params?.color_id);
+                const colorJSON = await getColor(colorid);
                 const data = colorJSON?.colors;
                 setcolors(data);
             };
             fetchColor()
-        }, [params?.color_id]
+        }, [colorid]
     )
 
 
@@ -128,7 +130,7 @@ const ColorEdit = ({ params }) => {
                     </div>
                     <div>
                         <label className="block text-gray-700 dark:text-gray-200 mb-2">
-                            color 
+                            color
                         </label>
                         <input
 

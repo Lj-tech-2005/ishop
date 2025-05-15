@@ -9,10 +9,10 @@ const ProductTable = async () => {
     return (
         <div className="mt-20 w-full">
              <div className="flex justify-between items-center max-w-6xl mx-auto mb-6">
-                <h1 className="text-3xl font-bold  text-white">Category List</h1>
+                <h1 className="text-3xl font-bold  text-white">Product List</h1>
                 <Link href={"/admin/product/add"}>
                     <button className="bg-amber-400 cursor-pointer text-black font-semibold px-5 py-2 rounded-lg shadow hover:bg-amber-500 transition">
-                        + Add New Category
+                        + Add New Product
                     </button>
                 </Link>
             </div>

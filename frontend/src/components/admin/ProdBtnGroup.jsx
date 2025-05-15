@@ -119,9 +119,11 @@ export default function ProdBtnGroup({ product }) {
                     <button onClick={() => settoggle(product)} className="text-blue-500  cursor-pointer  hover:text-blue-700" title="View">
                         <FaEye className="text-base" />
                     </button>
-                    <button className="text-yellow-500 cursor-pointer hover:text-yellow-600" title="Edit">
-                        <FaEdit className="text-base" />
-                    </button>
+                    <Link href={`/admin/product/edit/${product._id}`}>
+                        <button className="text-yellow-500 cursor-pointer hover:text-yellow-600" title="Edit">
+                            <FaEdit className="text-base" />
+                        </button>
+                    </Link>
                     <button onClick={() => { deletehandler(product._id) }} className="text-red-500 cursor-pointer hover:text-red-700" title="Delete">
                         <FaTrash className="text-base" />
                     </button>
@@ -207,7 +209,7 @@ const ProductDetail = ({ product, onClose }) => {
                             {product.images.map((img, i) => (
                                 <img
                                     key={i}
-                                    src={img}
+                                    src={`${process.env.NEXT_PUBLIC_API_BASE_URL}images/product/${img}`}
                                     alt={`img-${i}`}
                                     className="h-24 w-24 object-cover rounded-md border"
                                 />

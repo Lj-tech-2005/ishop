@@ -10,6 +10,8 @@ import { getCategory } from "@/app/library/api-call";
 
 const Categoryedit = ({ params }) => {
 
+    const param = use(params)
+    const catid = param?.category_id
     const router = useRouter()
     const [category, setcategory] = useState({})
 
@@ -38,7 +40,7 @@ const Categoryedit = ({ params }) => {
 
 
 
-        axiosApiInstance.put(`category/update/${params?.category_id}`, formdata).then(
+        axiosApiInstance.put(`category/update/${catid}`, formdata).then(
             (res) => {
                 notify(res.data.msg, res.data.flag)
                 if (res.data.flag === 1) {
@@ -59,12 +61,12 @@ const Categoryedit = ({ params }) => {
     useEffect(
         () => {
             const fetchCategory = async () => {
-                const categoryJSON = await getCategory(params?.category_id);
+                const categoryJSON = await getCategory(catid);
                 const data = categoryJSON?.categorys;
                 setcategory(data);
             };
             fetchCategory()
-        }, [params?.category_id]
+        }, [catid]
     )
 
 

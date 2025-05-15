@@ -9,6 +9,8 @@ const CategoryList = async () => {
     const categoryJSON = await getCategory();
     const catdata = categoryJSON?.categorys;
 
+    
+
     return (
         <div className="min-h-screen p-6 pt-20  dark:bg-gray-900">
 
