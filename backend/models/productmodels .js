@@ -38,12 +38,12 @@ const productSchema = new mongoose.Schema(
         },
         categoryId: {
             type: mongoose.Schema.ObjectId,
-            ref: "Category"
+            ref: "category"
         },
         colors: [
             {
                 type: mongoose.Schema.ObjectId,
-                ref: "Color"
+                ref: "color"
             }
         ],
         thumbnail: {

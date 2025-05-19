@@ -1,12 +1,11 @@
 'use client'
-
-
 import React from 'react';
 import { IoIosArrowDown } from "react-icons/io";
 import { IoMdSearch } from "react-icons/io";
 import { useState } from 'react';
 import { FaBars } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
+import Link from 'next/link';
 
 export default function Header() {
 
@@ -14,7 +13,7 @@ export default function Header() {
 
     return (
         <header className=" bg-white ">
-            <div className=" mx-auto max-w-[1360px] p-2 md:p-4 rounded-[10px]">
+            <div className="max-w-[1360px] mx-auto p-2 md:p-4 rounded-[10px]">
                 {/* Top Info Bar */}
                 <div className="hidden md:flex flex-col sm:flex-row justify-between px-2 sm:px-5 gap-2 sm:gap-0">
                     <div className="flex justify-between sm:justify-start gap-2 sm:gap-4">
@@ -36,7 +35,7 @@ export default function Header() {
                 {/* Main Navigation */}
                 <nav className="mt-5 flex flex-wrap md:flex-nowrap  items-start lg:items-center justify-between gap-4 px-2 sm:px-5">
                     {/* Logo + Menu */}
-                    <div className="flex  justify-between md:justify-normal   gap-4 w-full">
+                    <div className="flex justify-between md:justify-normal gap-4 w-full">
 
 
                         <div className="flex cursor-pointer items-center gap-2">
@@ -48,10 +47,13 @@ export default function Header() {
                                 <p>TECH MART</p>
                             </div>
                         </div>
-                        <ul className="hidden items-center md:flex flex-wrap gap-4 text-[14px] font-bold">
-                            <li className="flex items-center gap-1">Home<IoIosArrowDown className="mt-1" /></li>
+                        <ul className="hidden items-center  cursor-pointer md:flex flex-wrap gap-4 text-[14px] font-bold">
+                            <Link href={"/"}>
+                                <li className="flex  items-center gap-1">Home</li>
+                            </Link>
                             <li className="flex items-center gap-1">Pages<IoIosArrowDown className="mt-1" /></li>
-                            <li className="flex items-center gap-1">Products<IoIosArrowDown className="mt-1" /></li>
+                            <Link href={"/store"}><li className="flex items-center gap-1">Store<IoIosArrowDown className="mt-1" /></li></Link>
+
                             <li>Contact</li>
                         </ul>
 
@@ -76,9 +78,11 @@ export default function Header() {
                     <div className={`md:hidden bg-black fixed z-10 top-0 ${toggle ? "left-0" : "left-[-100%]"}  duration-500 p-5 text-white w-[50vw]  h-screen flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-9`}>
 
                         <ul className="flex flex-col flex-wrap gap-4 text-[14px] font-bold">
-                            <li className="flex items-center gap-1">Home<IoIosArrowDown className="mt-1" /></li>
+                            <Link href={"/"}>
+                                <li className="flex cursor-pointer  items-center gap-1">Home</li>
+                            </Link>
                             <li className="flex items-center gap-1">Pages<IoIosArrowDown className="mt-1" /></li>
-                            <li className="flex items-center gap-1">Products<IoIosArrowDown className="mt-1" /></li>
+                            <Link href={"/store"}><li className="flex items-center gap-1">Store<IoIosArrowDown className="mt-1" /></li></Link>
                             <li>Contact</li>
                         </ul>
                     </div>

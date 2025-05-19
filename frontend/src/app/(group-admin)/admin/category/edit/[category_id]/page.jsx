@@ -13,8 +13,7 @@ const Categoryedit = ({ params }) => {
     const param = use(params)
     const catid = param?.category_id
     const router = useRouter()
-    const [category, setcategory] = useState({})
-
+    const [category, setcategory] = useState(null)
 
 
 
@@ -64,10 +63,15 @@ const Categoryedit = ({ params }) => {
                 const categoryJSON = await getCategory(catid);
                 const data = categoryJSON?.categorys;
                 setcategory(data);
+            
             };
             fetchCategory()
         }, [catid]
+
+
     )
+
+  
 
 
 
@@ -105,7 +109,7 @@ const Categoryedit = ({ params }) => {
                             Name
                         </label>
                         <input
-                            defaultValue={category.name}
+                            defaultValue={category?.name}
                             ref={nameref}
                             onChange={changehandler}
                             name="name"
@@ -121,7 +125,7 @@ const Categoryedit = ({ params }) => {
                             Name slug
                         </label>
                         <input
-                            defaultValue={category.slug}
+                            defaultValue={category?.slug}
                             ref={slugref}
                             name="name"
                             readOnly
@@ -143,7 +147,7 @@ const Categoryedit = ({ params }) => {
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
-                    <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}images/category/${category.categoryImage}`} height="100px" width="100px" alt="" />
+                    <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}images/category/${category?.categoryImage}`} height="100px" width="100px" alt="" />
 
                     <div className="flex justify-end space-x-4 pt-4">
                         <Link href={"/admin/category"}>

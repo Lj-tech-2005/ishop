@@ -12,6 +12,7 @@ export default function ProdBtnGroup({ product }) {
 
     const [toggle, settoggle] = useState(null)
 
+    console.log(product)
 
     const router = useRouter()
 
@@ -197,7 +198,22 @@ const ProductDetail = ({ product, onClose }) => {
                         <p><span className="font-semibold">Stock:</span> {product.stock ? 'Available' : 'Out of Stock'}</p>
                     </div>
                     <div>
-                        <p><span className="font-semibold">Colors:</span> {product.colors?.join(', ') || 'N/A'}</p>
+                        <p className='flex gap-6'>
+                            Colors:
+                            {
+                                product?.colors?.map((color,i) => {
+
+                                    return (
+
+                                        <span className='p-2' key={i} style={{ background: color.Hexcode }}></span>
+                                    )
+
+                                })
+                            }
+                        </p>
+                    </div>
+                    <div>
+                        <p><span className="font-semibold">Category:{product?.categoryId?.name}</span></p>
                     </div>
                 </div>
 

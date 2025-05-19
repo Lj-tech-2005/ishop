@@ -4,7 +4,12 @@ import { useRouter } from "next/navigation";
 import { axiosApiInstance } from "../library/helper";
 
 
+
+
+
 export default function AdminLogin() {
+
+
     const router = useRouter()
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -17,11 +22,12 @@ export default function AdminLogin() {
         }
 
 
-        axiosApiInstance.post("admin/login", data ,{withCredentials:true}).then(
+        axiosApiInstance.post("admin/login", data, { withCredentials: true }).then(
             (res) => {
                 console.log(res)
-                if(res.data.flag == 1){
-
+                if (res.data.flag == 1) {
+                    localStorage.setItem("admin", JSON.stringify(res.data.admin))
+                    localStorage.setItem("loginAt", new Date());
                     router.push("/admin")
 
                 }

@@ -9,6 +9,7 @@ export default function Status({ Status, statusUrl }) {
 
 
     const token = (getCookies("admin_token"))
+
     const router = useRouter()
     const statushandler = () => {
 
@@ -36,7 +37,6 @@ export default function Status({ Status, statusUrl }) {
 
             (err) => {
                 console.log(err)
-
                 notify("something went is wrong", 0)
             }
 

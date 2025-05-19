@@ -12,7 +12,7 @@ const ColorList  = async () => {
     
 
     return (
-        <div className="min-h-screen p-6 pt-20 bg-gray-100 dark:bg-gray-900">
+        <div className="min-h-screen p-6 pt-20 dark:bg-gray-900">
 
             <div className="flex justify-between items-center max-w-6xl mx-auto mb-6">
                 <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Color List</h1>

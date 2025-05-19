@@ -7,9 +7,10 @@ const getCategory = async (id = null) => {
 
     let API = "category"
     if (id != null) {
-        API = `category/${id}`; 
+        API = `category/${id}`;
 
     }
+
     return axiosApiInstance.get(API).then(
 
         (response) => {
@@ -19,6 +20,7 @@ const getCategory = async (id = null) => {
     ).catch(
         (error) => {
 
+            console.log(error)
             return null
 
         }
@@ -31,7 +33,7 @@ const getColor = async (id = null) => {
 
     let API = "color"
     if (id !== null) {
-        API = `color/${id}`; 
+        API = `color/${id}`;
     }
     return axiosApiInstance.get(API).then(
 
@@ -51,32 +53,35 @@ const getColor = async (id = null) => {
 };
 
 
-const getproduct = async (id = null) => {
+const getproduct = async (id = null, category_slug = null, color = null, limit = 0,minPrice=null,maxPrice=null) => {
+    let API = "product";
 
-    let API = "product"
-    if (id !== null) {
-        API = `product/${id}`; 
+    if (id) {
+        API += `/${id}`;
     }
-    return axiosApiInstance.get(API).then(
 
-        (response) => {
+    const query = new URLSearchParams();
 
-            return response.data;
+    if (category_slug) query.append("category", category_slug);
+    if (color) query.append("color", color);
+    if (limit) query.append("limit", limit);
 
-        }
-    ).catch(
-        (error) => {
+    if (minPrice !== null) query.append("minPrice", minPrice);
+    if (maxPrice !== null) query.append("maxPrice", maxPrice);
+    // console.log(`API Request: ${API}?${query.toString()}`);
 
-            return null
-
-        }
-
-    )
+    try {
+        const response = await axiosApiInstance.get(`${API}?${query.toString()}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching product:", error);
+        return null;
+    }
 };
 
 
 
 
-export { getColor, getCategory,getproduct };
+export { getColor, getCategory, getproduct };
 
 

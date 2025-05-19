@@ -3,6 +3,7 @@ import '../globals.css';
 import SideMenu from "@/components/admin/SideMenu";
 import Header from "@/components/admin/Header";
 import { ToastContainer, toast } from 'react-toastify';
+import Storeprovider from "@/components/storeprovider";
 
 
 
@@ -24,25 +25,29 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-[#1d2d3a]">
+      <Storeprovider>
 
-        <div className="grid grid-cols-5">
+        <body className="bg-[#1d2d3a]">
 
-       
+          <div className="grid grid-cols-5">
+
+
             <SideMenu />
-          
-          <ToastContainer
-          autoClose={1200}
-          />
-          <div className="col-span-4">
-            <Header />
-            {children}
 
+            <ToastContainer
+              autoClose={1200}
+            />
+            <div className="col-span-4">
+              <Header />
+              {children}
+
+            </div>
           </div>
-        </div>
 
 
-      </body>
+        </body>
+      </Storeprovider>
+
     </html>
   );
 }

@@ -1,6 +1,8 @@
 
 const { genrateUniqueName } = require("../helper");
 const productmodel = require("../models/productmodels ");
+const categorymodels = require("../models/categorymodels");
+const colormodels = require("../models/colormodels");
 const fs = require("fs");
 
 
@@ -36,6 +38,7 @@ const productconntroller = {
                         product.save().then(() => {
                             res.send({ msg: "Product created successfully", flag: 1 })
                         }).catch((err) => {
+                            console.log(err)
                             res.send({ msg: "Unable to create product", flag: 0, errmsg: err.message })
                         })
 
@@ -52,29 +55,72 @@ const productconntroller = {
         }
     },
     async read(req, res) {
-
         try {
-            let products = null;
-            const id = req.params.id
+            const id = req.params.id;
+
+            // Fetch single product by ID first
             if (id) {
-                products = await productmodel.findById(id);
-
-
-            } else {
-                products = await productmodel.find().sort({ createdAt: -1 });
-
+                const product = await productmodel.findById(id).populate(["categoryId", "colors"]);
+                if (!product) {
+                    return res.send({ msg: "Product not found", products: null, total: 0, flag: 1 });
+                }
+                return res.send({ msg: "Product found", products: product, total: 1, flag: 1 });
             }
 
-            res.send({ msg: "product find", flag: 1, products, total: products.length })
+            // Build filter query
+            const filterQuery = {};
 
-        } catch (err) {
+            // Category Filter
+            if (req.query.category) {
+                const category = await categorymodels.findOne({ slug: req.query.category });
+                if (category) {
+                    filterQuery.categoryId = category._id;
+                } else {
+                    return res.send({ msg: "Category not found", products: [], total: 0, flag: 1 });
+                }
+            }
 
+            // Color Filter
+            if (req.query.color) {
+                const color = await colormodels.findOne({ slug: req.query.color });
+                if (color) {
+                    filterQuery.colors = { $in: [color._id] };
+                } else {
+                    return res.send({ msg: "Color not found", products: [], total: 0, flag: 1 });
+                }
+            }
 
-            res.status(500).send({ msg: 'Internal Server Error', flag: 0 });
+            // Price Filter
+            if (req.query.minPrice || req.query.maxPrice) {
+                const priceFilter = {};
+                if (req.query.minPrice) priceFilter.$gte = parseFloat(req.query.minPrice);
+                if (req.query.maxPrice) priceFilter.$lte = parseFloat(req.query.maxPrice);
 
+                // Make sure you’re filtering on correct field name (price or finalPrice)
+                filterQuery.finalPrice = priceFilter;
+            }
+
+            // Limit handling
+            const limit = req.query.limit ? parseInt(req.query.limit) : 0;
+
+            // Fetch filtered products
+            const products = await productmodel.find(filterQuery).limit(limit).populate(["categoryId", "colors"]);
+
+            // Response
+            res.send({
+                msg: "Product found",
+                products,
+                total: products.length,
+                flag: 1
+            });
+
+        } catch (error) {
+            console.error("Error in Product Read API:", error);
+            res.status(500).send({ msg: "Internal Server Error", flag: 0 });
         }
+    }
 
-    },
+    ,
     async status(req, res) {
 
         try {

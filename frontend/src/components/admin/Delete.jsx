@@ -3,36 +3,48 @@
 import { axiosApiInstance, notify } from '@/app/library/helper'
 import React from 'react'
 import { useRouter } from 'next/navigation'
+import Swal from 'sweetalert2'
 
 export default function Delete({ id, color }) {
   const router = useRouter()
 
   const deletehandler = () => {
-    let url = ''
-    if (color) {
-      url = `color/delete/${id}`
-    } else {
-      url = `category/delete/${id}` 
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const url = color ? `color/delete/${id}` : `category/delete/${id}`
 
-    axiosApiInstance.delete(url)
-      .then((res) => {
-        notify(res.data.msg, res.data.flag)
-        if (res) {
-          router.refresh()
-        }
-      })
-      .catch(() => {
-        notify('something went wrong', 0)
-      })
+        axiosApiInstance.delete(url)
+          .then((res) => {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              icon: "success"
+            })
+            notify(res.data.msg, res.data.flag)
+            router.refresh()
+          })
+          .catch((err) => {
+            console.error(err)
+            notify('Something went wrong', 0)
+          })
+      }
+    })
   }
 
   return (
     <button
       onClick={deletehandler}
-      className="px-4 py-1 cursor-pointer text-white bg-red-600 rounded-md hover:bg-red-700 transition">
+      className="px-4 py-1 cursor-pointer text-white bg-red-600 rounded-md hover:bg-red-700 transition"
+    >
       Delete
     </button>
   )
 }
-

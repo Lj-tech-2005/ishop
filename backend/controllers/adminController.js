@@ -21,7 +21,7 @@ const adminController = {
                     maxAge: 24 * 60 * 60 * 1000, // 1 day
                     samesite: 'lax',        // Helps prevent CSRF
                 });
-                res.send({ msg: "login successfully", flag: 1, admin: { ...admin.toJSON, password: "", token } });
+                res.send({ msg: "login successfully", flag: 1, admin: { ...admin.toJSON(), password: "", token } });
 
             } else {
 

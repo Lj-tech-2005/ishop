@@ -1,5 +1,6 @@
 const { genrateUniqueName } = require("../helper");
 const categorymodel = require("../models/categorymodels");
+const productmodel = require("../models/productmodels ");
 const { param } = require("../routers/categoryrouters");
 const fs = require("fs")
 
@@ -76,30 +77,34 @@ const categoryconntroller = {
         }
 
     },
-    async read(req, res) {
-
+  async read(req, res) {
         try {
-            let categorys = null;
-            const id = req.params.id
+            const id = req.params.id;
+
             if (id) {
-                categorys = await categorymodel.findById(id);
-
-
-            } else {
-                categorys = await categorymodel.find().sort({ createdAt: -1 });
-
+                const category = await categorymodel.findById(id);
+                return res.send({ msg: "Category found successfully", flag: 1, categorys: category });
             }
 
-            res.send({ msg: "category find", flag: 1, categorys, total: categorys.length })
+            const categorys = await categorymodel.find().sort({ createdAt: -1 });
+            const data = [];
 
-        } catch (err) {
+            const allPromise = categorys.map(async (cat) => {
+                const productCount = await productmodel.countDocuments({ categoryId: cat._id });
+                data.push({
+                    ...cat.toObject(),
+                    productCount
+                });
+            });
 
+            await Promise.all(allPromise);
 
-            res.status(500).send({ msg: 'Internal Server Error', flag: 0 });
-
-        }
-
-    },
+            res.send({ msg: "Categories found successfully", flag: 1, categorys: data });
+        } catch (error) {
+            res.send({ msg: "Internal Server Error", flag: 0 });
+        }
+    }
+    ,
     async delete(req, res) {
         try {
             const id = req.params.id;
@@ -172,8 +177,16 @@ const categoryconntroller = {
     async update(req, res) {
 
         try {
+
+
+            const { name, slug } = req.body
+            if (!name || !slug || !req.files || !req.files.categoryImage) {
+
+                return res.send({ msg: "please fill all the fields", flag: 0 });
+            }
+
+
             const id = req.params.id;
-            const { name, slug } = req.body;
             const file = req.files?.categoryImage;
 
             const category = await categorymodel.findById(id);

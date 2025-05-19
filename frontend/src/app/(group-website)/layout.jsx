@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import '../globals.css';
 import Header from "@/components/website/Header";
 import Footer from "@/components/website/Footer";
+import Storeprovider from "@/components/storeprovider";
 
 
 const geistSans = Geist({
@@ -22,13 +23,15 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-[#E2E4EB]">
-        <Header/>
-        {children}
-        <Footer/>
-       
+      <Storeprovider>
+        <body className="bg-[#E2E4EB]">
+          <Header />
+          {children}
+          <Footer />
 
-      </body>
+
+        </body>
+      </Storeprovider>
     </html>
   );
 }

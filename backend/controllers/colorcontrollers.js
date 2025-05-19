@@ -159,6 +159,11 @@ const colorcontroller = {
     async update(req, res) {
 
         try {
+
+            if (!req.body.name || !req.body.slug || !req.body.Hexcode) {
+                return res.send({ msg: "please fill all the fields", flag: 0 });
+
+            }
             const id = req.params.id
             await colormodel.findByIdAndUpdate(
                 { _id: id },
