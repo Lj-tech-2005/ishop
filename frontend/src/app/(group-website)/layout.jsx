@@ -25,10 +25,11 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <Storeprovider>
         <body className="bg-[#E2E4EB]">
-          <Header />
-          {children}
-          <Footer />
-
+          <Storeprovider >
+            <Header />
+            {children}
+            <Footer />
+          </Storeprovider>
 
         </body>
       </Storeprovider>

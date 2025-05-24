@@ -69,7 +69,7 @@ export default async function layout({ children }) {
                 <div className="p-6 bg-white rounded-xl shadow-sm">
                     <h2 className="text-xl font-semibold mb-6">POPULAR CATEGORIES</h2>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-6 gap-y-8">
-                        {catdata.map((cat) => (
+                        {catdata?.map((cat) => (
                             <div key={cat._id} className="flex flex-col items-center text-center space-y-2">
                                 <Link href={`/store/${cat?.slug}`}>
                                     <div className="w-16 h-16 relative">

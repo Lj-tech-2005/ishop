@@ -8,7 +8,7 @@ export const adminSlice = createSlice({
   },
   reducers: {
     setAdmin: (state, current) => {
-      state.data = current.payload.admin, "payload"
+      state.data = current.payload.admin 
       state.loginAt = current.payload.loginAt
     },
     removeAdmin: (state) => {

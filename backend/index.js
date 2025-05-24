@@ -8,6 +8,8 @@ const categoryrouter = require("./routers/categoryrouters");
 const colorrouter = require("./routers/colorrouter");
 const productrouter = require("./routers/productrouters");
 const adminrouters = require("./routers/adminrouters");
+const userRouters = require('./routers/userrouters');
+const CartRouter = require('./routers/cartRouter');
 
 
 server.use(express.json());
@@ -17,7 +19,10 @@ server.use("/category", categoryrouter)
 server.use("/color", colorrouter)
 server.use("/product", productrouter)
 server.use("/admin", adminrouters)
+server.use("/user", userRouters)
 server.use(express.static("public"))
+server.use("/cart", CartRouter);
+
 
 
 

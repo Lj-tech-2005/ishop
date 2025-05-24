@@ -1,5 +1,6 @@
 import { getproduct } from '@/app/library/api-call';
-import { FaShoppingCart, FaTag } from 'react-icons/fa';
+import { FaTag } from 'react-icons/fa'
+import AddToCart from '@/components/website/addToCart';
 
 const Productslug = async ({ params, searchParams }) => {
     const response = await getproduct(
@@ -11,6 +12,7 @@ const Productslug = async ({ params, searchParams }) => {
         searchParams?.maxPrice
     );
     const products = response?.products || [];
+    console.log(products)
 
     return (
         <div className="max-w-[1360px] p-4">
@@ -71,10 +73,7 @@ const Productslug = async ({ params, searchParams }) => {
                                     )}
                                 </div>
 
-                                <button className="mt-2 w-full flex items-center justify-center gap-2 bg-[#01A49E] text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition duration-300">
-                                    <FaShoppingCart />
-                                    Add to Cart
-                                </button>
+                              <AddToCart product={product}/>
                             </div>
                         </div>
                     ))}

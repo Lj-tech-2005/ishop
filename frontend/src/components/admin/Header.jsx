@@ -1,6 +1,7 @@
 'use client';
 import { axiosApiInstance } from '@/app/library/helper';
-import { removeAdmin, setAdmin } from '@/redux/features/adminSlice';
+import { setAdmin } from '@/redux/features/adminSlice';
+import { removeAdmin} from '@/redux/features/userSlice';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {

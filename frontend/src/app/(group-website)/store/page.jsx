@@ -1,12 +1,13 @@
 import { getproduct } from '@/app/library/api-call';
-import { FaShoppingCart, FaTag } from 'react-icons/fa';
+import AddToCart from '@/components/website/addToCart';
+import { FaTag } from 'react-icons/fa';
 
-const ProductCard = async ({searchParams}) => {
-  const response = await getproduct(null,null,searchParams?.color,searchParams?.limit,searchParams?.minPrice,searchParams?.maxPrice);
-  const products = response?.products || [];
+const ProductCard = async ({ searchParams }) => {
+    const response = await getproduct(null, null, searchParams?.color, searchParams?.limit, searchParams?.minPrice, searchParams?.maxPrice);
+    const products = response?.products || [];
 
-  return (
-    <div className="max-w-[1360px] p-4">
+    return (
+        <div className="max-w-[1360px] p-4">
             {products.length === 0 ? (
                 <div className="text-center text-gray-500 text-lg py-20">
                     Product not found
@@ -64,17 +65,14 @@ const ProductCard = async ({searchParams}) => {
                                     )}
                                 </div>
 
-                                <button className="mt-2 w-full flex items-center justify-center gap-2 bg-[#01A49E] text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition duration-300">
-                                    <FaShoppingCart />
-                                    Add to Cart
-                                </button>
+                                <AddToCart product={product} />
                             </div>
                         </div>
                     ))}
                 </div>
             )}
         </div>
-  );
+    );
 };
 
 export default ProductCard;

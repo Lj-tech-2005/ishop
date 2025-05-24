@@ -1,17 +1,40 @@
 'use client'
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IoIosArrowDown } from "react-icons/io";
 import { IoMdSearch } from "react-icons/io";
 import { useState } from 'react';
 import { FaBars } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import Link from 'next/link';
+import { useDispatch, useSelector } from 'react-redux';
+import { MdShoppingCart } from "react-icons/md";
+import { lstocart } from '@/redux/features/cartSlice';
+import { logoutUser, lstoUser } from '@/redux/features/userSlice';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
-
+    const router = useRouter()
+    const cart = useSelector((state) => state.cart);
+    const user = useSelector((state) => state.user);
+    const dispatcher = useDispatch()
     const [toggle, settoggle] = useState(false);
 
+    useEffect(() => {
+        dispatcher(lstocart());
+        dispatcher(lstoUser());
+    }, [])
+
+
+    function logoutHandler() {
+        dispatcher(logoutUser());
+        router.push("/login")
+    }
+
+
+
+
     return (
+
         <header className=" bg-white ">
             <div className="max-w-[1360px] mx-auto p-2 md:p-4 rounded-[10px]">
                 {/* Top Info Bar */}
@@ -94,18 +117,42 @@ export default function Header() {
                     {/* Login + Cart */}
                     <div className="flex gap-4 sm:gap-5 items-center">
                         <div className="uppercase text-left">
-                            <p className="text-[#666666] text-[11px] font-normal">welcome</p>
-                            <p className="text-[10px] md:text-[14px] font-bold">log in / Register</p>
+                            {
+                                user.data != null ?
+                                    <>
+                                        <div className="text-xs text-gray-500">{user?.data?.name}</div>
+                                        <div onClick={logoutHandler} className="font-semibold cursor-pointer hover:underline">
+                                            LOGOUT
+                                        </div>
+                                    </>
+
+                                    :
+                                    <>
+                                        <div className="text-xs text-gray-500">WELCOME</div>
+                                        <Link href="/login?ref=header">
+                                            <div className="font-semibold cursor-pointer hover:underline">
+                                                LOG IN / REGISTER
+                                            </div>
+                                        </Link>
+
+
+                                    </>
+                            }
+
                         </div>
-                        <div className="flex gap-2 items-center">
-                            <div className="bg-[#EBEEF6] w-[40px] h-[40px] relative rounded-[20px] flex items-center justify-center">
-                                <span className="bg-[#01A49E] rounded-[10px] text-white text-[11px] absolute bottom-0 right-0 flex items-center justify-center w-[20px] h-[20px]">5</span>
+                        <Link href={"/cart"}>
+                            <div className="flex gap-2 items-center">
+                                <div className="bg-[#EBEEF6] text-2xl w-[40px] h-[40px] relative rounded-[20px] flex items-center justify-center">
+                                    <MdShoppingCart />
+                                    <span className="bg-[#01A49E] rounded-[10px] text-white text-[11px] absolute bottom-[-8px] right-[-5px] flex items-center justify-center w-[20px] h-[20px]">{cart?.items.length}</span>
+                                </div>
+                                <div className="text-left">
+                                    <p className="text-[#666666] text-[11px] font-normal uppercase">cart</p>
+                                    {/* <p className="text-[10px] md:text-[14px] font-bold">$1,689.00</p> */}
+                                </div>
                             </div>
-                            <div className="text-left">
-                                <p className="text-[#666666] text-[11px] font-normal uppercase">cart</p>
-                                <p className="text-[10px] md:text-[14px] font-bold">$1,689.00</p>
-                            </div>
-                        </div>
+
+                        </Link>
                     </div>
 
 
