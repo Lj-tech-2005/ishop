@@ -3,12 +3,13 @@ import { useEffect, useRef, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { axiosApiInstance, createSlug, notify } from '@/app/library/helper';
 import Select from 'react-select'
-import { getCategory, getColor } from '@/app/library/api-call';
+import { getBrand, getCategory, getColor } from '@/app/library/api-call';
 import RichTextEditor from '@/components/admin/RichTextEditor';
 import Link from 'next/link';
 
 export default function AddProductForm() {
   const [category, setCategory] = useState();
+  const [brand, setBrand] = useState();
   const [color, setColor] = useState();
   const [selColors, setSelColors] = useState([])
   const [description, setdiscription] = useState("")
@@ -27,6 +28,9 @@ export default function AddProductForm() {
     const colordata = colorJSON?.colors;
     setColor(colordata)
 
+    const brandJSON = await getBrand();
+    const branddata = brandJSON?.brand;
+    setBrand(branddata)
 
   }
 
@@ -62,7 +66,8 @@ export default function AddProductForm() {
     formData.append("originalPrice", originalPriceRef.current.value);
     formData.append("discountPercentage", discountPriceRef.current.value);
     formData.append("finalPrice", finalPriceRef.current.value);
-    formData.append("categoryId", e.target.categoryId.value)
+    formData.append("categoryId", e.target.categoryId.value);
+    formData.append("brandId", e.target.brandId.value);
     formData.append("colors", JSON.stringify(selColors))
     formData.append("thumbnail", e.target.productImage.files[0])
 
@@ -242,6 +247,22 @@ export default function AddProductForm() {
                   )
 
                 } />
+            </div>
+            <div>
+              <label htmlFor="brand" className="text-sm font-medium text-gray-700">
+                Brand
+              </label>
+              <Select
+                name="brandId"
+                options={
+                  brand?.map(
+                    (brand, i) => {
+                      return { value: brand._id, label: brand.name }
+                    }
+                  )
+
+                } />
+
             </div>
           </div>
 

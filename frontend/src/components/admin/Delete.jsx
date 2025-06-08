@@ -5,7 +5,7 @@ import React from 'react'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 
-export default function Delete({ id, color }) {
+export default function Delete({ id, type }) {
   const router = useRouter()
 
   const deletehandler = () => {
@@ -19,13 +19,13 @@ export default function Delete({ id, color }) {
       confirmButtonText: "Yes, delete it!"
     }).then((result) => {
       if (result.isConfirmed) {
-        const url = color ? `color/delete/${id}` : `category/delete/${id}`
+        const url = `${type}/delete/${id}` // dynamically sets the URL like "brand/delete/123"
 
         axiosApiInstance.delete(url)
           .then((res) => {
             Swal.fire({
               title: "Deleted!",
-              text: "Your file has been deleted.",
+              text: "Your item has been deleted.",
               icon: "success"
             })
             notify(res.data.msg, res.data.flag)
@@ -48,3 +48,4 @@ export default function Delete({ id, color }) {
     </button>
   )
 }
+

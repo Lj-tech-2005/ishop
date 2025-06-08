@@ -10,11 +10,12 @@ import {
 import { TbCategory } from "react-icons/tb";
 import { IoMdColorPalette } from "react-icons/io";
 import { FaProductHunt } from "react-icons/fa6";
+import { SiBrandfolder } from "react-icons/si";
 import Link from 'next/link';
 
 export default function SideMenu() {
   return (
-    <aside className="h-screen  fixed w-[20%] bg-[#1F2937] text-white p-5 shadow-lg z-50">
+    <aside className="h-screen  fixed  bg-[#1F2937] text-white p-5 shadow-lg z-50">
       {/* Title / Logo */}
       <div className="mb-6">
         <h1 className="text-xl font-bold  tracking-wide">
@@ -63,7 +64,7 @@ export default function SideMenu() {
           <Link href={"/admin/category"}>
             <li className="flex items-center justify-between px-4 py-2 rounded-lg hover:bg-[#374151] hover:text-red-400 text-gray-300 cursor-pointer transition-all">
               <div className="flex items-center gap-3">
-              <TbCategory />
+                <TbCategory />
                 <span>Category</span>
               </div>
               <FaAngleRight className="text-gray-400" />
@@ -71,14 +72,20 @@ export default function SideMenu() {
           </Link>
           <Link href={"/admin/product"}>
             <li className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-[#374151] hover:text-red-400 text-gray-300 cursor-pointer transition-all">
-            <FaProductHunt />
+              <FaProductHunt />
               <span>Product</span>
             </li>
           </Link>
           <Link href={"/admin/color"}>
             <li className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-[#374151] hover:text-red-400 text-gray-300 cursor-pointer transition-all">
-            <IoMdColorPalette />
+              <IoMdColorPalette />
               <span>Color</span>
+            </li>
+          </Link>
+          <Link href={"/admin/brand"}>
+            <li className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-[#374151] hover:text-red-400 text-gray-300 cursor-pointer transition-all">
+              <SiBrandfolder />
+              <span>Brand</span>
             </li>
           </Link>
         </ul>

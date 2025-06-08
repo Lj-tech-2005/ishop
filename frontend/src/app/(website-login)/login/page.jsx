@@ -9,7 +9,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 function LoginForm() {
     const params = useSearchParams();
-    console.log(params.get, "params")
     const router = useRouter();
     const dispatch = useDispatch();
 
@@ -38,9 +37,33 @@ function LoginForm() {
 
 
                     const updatedCart = await axiosApiInstance.post("cart/move-to-db", {
-                        user_id: response.data?.user?._id,
+                        user_id: res.data?.user?._id,
                         cart: cart != null ? cart : null
                     })
+
+                    console.log(updatedCart.data, "cart")
+                    let final_total = 0;
+                    let original_total = 0;
+                    console.log(updatedCart, "updatedCart")
+                    const dbCart = updatedCart.data?.cart?.map(
+                        (cd) => {
+                            final_total += ((cd.product_id?.finalPrice) * cd.qty);
+                            original_total += ((cd.product_id?.originalPrice) * cd.qty);
+
+                            return {
+                                productId: cd.product_id._id,
+                                qty: cd.qty
+                            }
+
+
+                        }
+                    )
+
+                    console.log(dbCart, final_total, original_total)
+
+                    localStorage.setItem("cart", JSON.stringify({
+                        items: dbCart, final_total, original_total
+                    }))
 
 
 

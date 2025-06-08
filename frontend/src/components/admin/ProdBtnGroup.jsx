@@ -10,9 +10,9 @@ import Link from 'next/link';
 
 export default function ProdBtnGroup({ product }) {
 
+    console.log(product)
     const [toggle, settoggle] = useState(null)
 
-    console.log(product)
 
     const router = useRouter()
 
@@ -112,20 +112,22 @@ export default function ProdBtnGroup({ product }) {
             <td className="px-4 py-3 whitespace-nowrap">
                 <div className="flex items-center space-x-2">
                     <Link href={`/admin/product/multipalimage/${product._id}`}>
-                        <button className="text-blue-500 cursor-pointer hover:text-blue-700" title="View">
+                        <button className="text-black p-2 rounded  bg-amber-600 cursor-pointer " title="multipalimage">
                             Image
                         </button>
 
                     </Link>
-                    <button onClick={() => settoggle(product)} className="text-blue-500  cursor-pointer  hover:text-blue-700" title="View">
+                    <button onClick={() => settoggle(product)} className="text-black p-1 flex flex-col items-center rounded bg-amber-200   cursor-pointer  hover:text-blue-700" title="View">
                         <FaEye className="text-base" />
+                        view
                     </button>
                     <Link href={`/admin/product/edit/${product._id}`}>
-                        <button className="text-yellow-500 cursor-pointer hover:text-yellow-600" title="Edit">
+                        <button className="text-yellow-500 cursor-pointer flex flex-col justify-center bg-black p-2 py-1 rounded hover:text-yellow-600" title="Edit">
                             <FaEdit className="text-base" />
+                            Edit
                         </button>
                     </Link>
-                    <button onClick={() => { deletehandler(product._id) }} className="text-red-500 cursor-pointer hover:text-red-700" title="Delete">
+                    <button onClick={() => { deletehandler(product._id) }} className="text-red-500 bg-teal-300 p-2 py-3 rounded cursor-pointer hover:text-red-700" title="Delete">
                         <FaTrash className="text-base" />
                     </button>
                 </div>
@@ -214,6 +216,9 @@ const ProductDetail = ({ product, onClose }) => {
                     </div>
                     <div>
                         <p><span className="font-semibold">Category:{product?.categoryId?.name}</span></p>
+                    </div>
+                     <div>
+                        <p><span className="font-semibold">Brand:{product?.brandId?.name}</span></p>
                     </div>
                 </div>
 

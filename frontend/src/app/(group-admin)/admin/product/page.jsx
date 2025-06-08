@@ -7,8 +7,8 @@ const ProductTable = async () => {
     const products = response?.products;
 
     return (
-        <div className="mt-20 w-full">
-             <div className="flex justify-between items-center max-w-6xl mx-auto mb-6">
+        <div className="mt-20">
+             <div className="flex justify-between items-center px-5  mb-6">
                 <h1 className="text-3xl font-bold  text-white">Product List</h1>
                 <Link href={"/admin/product/add"}>
                     <button className="bg-amber-400 cursor-pointer text-black font-semibold px-5 py-2 rounded-lg shadow hover:bg-amber-500 transition">
@@ -16,7 +16,7 @@ const ProductTable = async () => {
                     </button>
                 </Link>
             </div>
-            <div className="w-full bg-gray-50 rounded-xl shadow-lg p-4">
+            <div className="w-full bg-gray-50 rounded-xl shadow-lg ">
                 <table className="table-auto w-full bg-white rounded-lg shadow-md text-sm">
                     <thead>
                         <tr className="bg-gray-100 text-gray-700 text-left uppercase tracking-wider">

@@ -14,7 +14,7 @@ const adminController = {
             }
 
             if (password === admin.password) {
-                var token = jwt.sign({ id: admin._id }, process.env.SECRET_KEY, { expiresIn: "1h" });
+                var token = jwt.sign({ id: admin._id }, process.env.SECRET_KEY, { expiresIn: "24h" });
                 res.cookie('admin_token', token, {
                     httpOnly: false,         // Prevents JavaScript access (recommended for security)
                     secure: true,           // Send only over HTTPS

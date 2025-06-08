@@ -9,7 +9,7 @@ import {
 
 const Dashboard = () => {
   return (
-    <div className="min-h-screen  mt-15 bg-gray-100 dark:bg-[#0f172a] p-6">
+    <div className="min-h-screen w-full mt-15 bg-gray-100 dark:bg-[#0f172a] p-6">
       {/* Dashboard Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white">

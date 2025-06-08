@@ -40,6 +40,10 @@ const productSchema = new mongoose.Schema(
             type: mongoose.Schema.ObjectId,
             ref: "category"
         },
+          brandId: {
+            type: mongoose.Schema.ObjectId,
+            ref: "brand"
+        },
         colors: [
             {
                 type: mongoose.Schema.ObjectId,

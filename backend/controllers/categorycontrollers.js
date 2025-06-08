@@ -31,7 +31,7 @@ const categoryconntroller = {
 
                     if (err) {
 
-                        return send({ msg: "unable to upload image" });
+                        return res.send({ msg: "unable to upload image" });
                     } else {
 
                         const categoryfind = await categorymodel.findOne({ name });
@@ -47,7 +47,7 @@ const categoryconntroller = {
                         const category = new categorymodel({ name, slug, categoryImage: categary_image });
 
                         category.save().then(
-                            (res) => {
+                            (result) => {
 
                                 res.send({ msg: "category create successfully", flag: 1 })
 
@@ -57,8 +57,7 @@ const categoryconntroller = {
 
                             (err) => {
                                 console.log(err)
-
-                                res.send({ msg: "category created successfully", flag: 1 });
+                                res.send({ msg: "unable to  create category", flag: 0 });
 
                             }
                         )
@@ -77,7 +76,7 @@ const categoryconntroller = {
         }
 
     },
-  async read(req, res) {
+    async read(req, res) {
         try {
             const id = req.params.id;
 
@@ -87,23 +86,21 @@ const categoryconntroller = {
             }
 
             const categorys = await categorymodel.find().sort({ createdAt: -1 });
-            const data = [];
 
-            const allPromise = categorys.map(async (cat) => {
+            const data = await Promise.all(categorys.map(async (cat) => {
                 const productCount = await productmodel.countDocuments({ categoryId: cat._id });
-                data.push({
+                return {
                     ...cat.toObject(),
                     productCount
-                });
-            });
-
-            await Promise.all(allPromise);
+                };
+            }));
 
             res.send({ msg: "Categories found successfully", flag: 1, categorys: data });
         } catch (error) {
             res.send({ msg: "Internal Server Error", flag: 0 });
-        }
-    }
+        }
+    }
+
     ,
     async delete(req, res) {
         try {
@@ -135,8 +132,6 @@ const categoryconntroller = {
 
     },
     async status(req, res) {
-
-        console.log(req)
 
         try {
             const id = req.params.id

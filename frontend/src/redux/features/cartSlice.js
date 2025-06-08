@@ -70,6 +70,15 @@ export const cartSlice = createSlice({
             localStorage.setItem("cart", JSON.stringify(state));
         },
 
+
+           emptyCart: (state) => {
+            state.items = null;
+            state.final_total = 0
+            state.original_total = 0;
+            localStorage.removeItem("cart");
+
+        },
+
         lstocart: (state) => {
             const lsCart = JSON.parse(localStorage.getItem("cart"));
             if (lsCart) {
@@ -82,7 +91,7 @@ export const cartSlice = createSlice({
 });
 
 // Export actions
-export const { Additem, removetoCart, qtyhandler, lstocart } = cartSlice.actions;
+export const { Additem,emptyCart, removetoCart, qtyhandler, lstocart } = cartSlice.actions;
 
 // Export reducer
 export default cartSlice.reducer;

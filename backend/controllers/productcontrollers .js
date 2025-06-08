@@ -60,7 +60,7 @@ const productconntroller = {
 
             // Fetch single product by ID first
             if (id) {
-                const product = await productmodel.findById(id).populate(["categoryId", "colors"]);
+                const product = await productmodel.findById(id).populate(["categoryId", "colors","brandId"]);
                 if (!product) {
                     return res.send({ msg: "Product not found", products: null, total: 0, flag: 1 });
                 }
@@ -104,7 +104,7 @@ const productconntroller = {
             const limit = req.query.limit ? parseInt(req.query.limit) : 0;
 
             // Fetch filtered products
-            const products = await productmodel.find(filterQuery).limit(limit).populate(["categoryId", "colors"]);
+            const products = await productmodel.find(filterQuery).limit(limit).populate(["categoryId", "colors","brandId"]);
 
             // Response
             res.send({
@@ -273,7 +273,8 @@ const productconntroller = {
                 discountPercentage,
                 finalPrice,
                 categoryId,
-                colors
+                colors,
+                brandId
             } = req.body;
 
             const file = req.files?.thumbnail;
@@ -292,6 +293,7 @@ const productconntroller = {
                 discountPercentage,
                 finalPrice,
                 categoryId,
+                brandId,
                 colors: JSON.parse(colors) // make sure to parse if sent as string
             };
 

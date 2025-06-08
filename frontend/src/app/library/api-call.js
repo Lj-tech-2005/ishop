@@ -52,6 +52,28 @@ const getColor = async (id = null) => {
     )
 };
 
+const getBrand = async (id = null) => {
+
+    let API = "brand"
+    if (id !== null) {
+        API = `brand/${id}`;
+    }
+    return axiosApiInstance.get(API).then(
+
+        (response) => {
+        
+            return response.data;
+
+        }
+    ).catch(
+        (error) => {
+
+            return null
+
+        }
+
+    )
+};
 
 const getproduct = async (id = null, category_slug = null, color = null, limit = 0,minPrice=null,maxPrice=null) => {
     let API = "product";
@@ -82,6 +104,6 @@ const getproduct = async (id = null, category_slug = null, color = null, limit =
 
 
 
-export { getColor, getCategory, getproduct };
+export { getColor, getCategory, getproduct,getBrand };
 
 

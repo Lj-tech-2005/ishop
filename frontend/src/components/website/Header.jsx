@@ -8,7 +8,7 @@ import { IoClose } from "react-icons/io5";
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { MdShoppingCart } from "react-icons/md";
-import { lstocart } from '@/redux/features/cartSlice';
+import { emptyCart, lstocart } from '@/redux/features/cartSlice';
 import { logoutUser, lstoUser } from '@/redux/features/userSlice';
 import { useRouter } from 'next/navigation';
 
@@ -26,7 +26,9 @@ export default function Header() {
 
 
     function logoutHandler() {
+
         dispatcher(logoutUser());
+        dispatcher(emptyCart())
         router.push("/login")
     }
 

@@ -29,15 +29,16 @@ export default function RootLayout({ children }) {
 
         <body className="bg-[#1d2d3a]">
 
-          <div className="grid grid-cols-5">
+          <div className="grid grid-cols-12  w-full bg-blue-500 ">
 
-
-            <SideMenu />
-
-            <ToastContainer
+            <div className="bg-[#1F2937] w-full col-span-2 relative ">
+              <SideMenu />
+            </div>
+           
+            <div className="bg-[#1d2d3a] col-span-10">
+               <ToastContainer
               autoClose={1200}
             />
-            <div className="col-span-4">
               <Header />
               {children}
 

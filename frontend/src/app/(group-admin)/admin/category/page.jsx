@@ -57,7 +57,7 @@ const CategoryList = async () => {
                                                         Edit
                                                     </button>
                                                 </Link>
-                                                <Delete id={cat._id} />
+                                                <Delete type="category" id={cat._id} />
                                             </td>
                                         </tr>
                                     );
