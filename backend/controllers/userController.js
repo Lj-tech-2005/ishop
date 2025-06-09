@@ -13,7 +13,7 @@ const userController = {
             const { name, email, password } = req.body
             const existingUser = await userModel.findOne({ email: email });
             if (existingUser) {
-                res.send({ msg: "try with diffrent email id", flag: 0 })
+             return  res.send({ msg: "try with diffrent email id", flag: 0 })
             }
 
 
@@ -23,7 +23,7 @@ const userController = {
             user.save().then(
 
                 () => {
-                    res.send({ msg: "Accound created ", flag: 1, token, user: { ...user.toJSON(), password: "" } })
+                 return res.send({ msg: "Accound created ", flag: 1, token, user: { ...user.toJSON(), password: "" } })
                 }
 
             ).catch(
@@ -36,30 +36,33 @@ const userController = {
             )
 
         } catch (error) {
-            res.status(500).send({ msg: 'Internal Server Error', flag: 0 });
+          return  res.status(500).send({ msg: 'Internal Server Error', flag: 0 });
         }
     },
 
     async login(req, res) {
         try {
             const { email, password } = req.body;
+            if (!email || !password) { 
+                return res.status(400).send({ msg: "Email and password are required", flag: 0 }); 
+            }
             const user = await userModel.findOne({ email: email });
             if (!user) {
-                res.send({ msg: "User not exist", flag: 0 })
+                return res.send({ msg: "User not exist", flag: 0 })
             }
 
             if (password === cryptr.decrypt(user.password)) {
                 var token = jwt.sign({ ...user.toJSON() }, process.env.SECRET_KEY, { expiresIn: "24h" });
 
-                res.send({ msg: "Login succesfully", user: { ...user.toJSON(), password: "" }, token, flag: 1 })
+                return res.send({ msg: "Login succesfully", user: { ...user.toJSON(), password: "" }, token, flag: 1 })
             } else {
-                res.send({ msg: "Incorrect password", flag: 0 })
+                return res.send({ msg: "Incorrect password", flag: 0 })
 
             }
 
         } catch (error) {
             console.log(error)
-            res.send({ msg: "Internal Server Error", flag: 0 })
+            return res.send({ msg: "Internal Server Error", flag: 0 })
         }
     }
 }

@@ -39,7 +39,7 @@ const cartController = {
             const { userId, productId, qty } = req.body;
 
             if (!userId || !productId || !qty) {
-                return res.status(400).json({ msg: "Missing required fields", status: 0 });
+                return res.status(400).json({ msg: "Missing required fields", flag: 0 });
             }
 
             const existingItem = await CartModel.findOne({ user_id: userId, product_id: productId });
@@ -62,13 +62,43 @@ const cartController = {
 
             console.log("Hello")
 
-            return res.status(200).json({ msg: "Cart updated successfully", status: 1 });
+            return res.status(200).json({ msg: "Cart updated successfully", flag: 1 });
 
         } catch (error) {
             console.error(error);
-            return res.status(500).json({ msg: "Internal server error", status: 0 });
+            return res.status(500).json({ msg: "Internal server error", flag: 0 });
         }
+    },
+
+  async updateqty(req, res) {
+  try {
+    const { userId, productId, qtychange } = req.body;
+
+    if (!userId || !productId || qtychange === undefined || qtychange === null) {
+      return res.status(400).send({ msg: "Missing required fields", flag: 0 });
     }
+
+    const existingItem = await CartModel.findOne({ user_id: userId, product_id: productId });
+
+    if (!existingItem) {
+      return res.status(404).json({ msg: "Cart item not found", status: 0 });
+    }
+
+    let newqty = existingItem.qty + qtychange;
+    if (newqty <= 0) {
+      newqty = 1;
+    }
+
+    existingItem.qty = newqty;
+    await existingItem.save();
+
+    return res.status(200).json({ msg: "Quantity updated", status: 1 });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ msg: "Internal server error", status: 0 });
+  }
+}
+
 
 
 

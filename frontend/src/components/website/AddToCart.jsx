@@ -1,13 +1,30 @@
 'use client'
+import { axiosApiInstance } from '@/app/library/helper';
 import { Additem } from '@/redux/features/cartSlice';
-import { original } from '@reduxjs/toolkit';
 import React from 'react'
 import { FaShoppingCart } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function AddToCart({ product }) {
     const dispatcher = useDispatch()
+    const user = useSelector((state) => state.user?.data);
+
+     console.log(user,"my user")
+     
     function addcart() {
+
+        if (user != null) {
+
+            axiosApiInstance.post("cart/add-to-cart",{
+                userId:user?._id,
+                productId:product._id,
+                qty:1
+
+            });
+
+
+        }
+
         dispatcher(Additem({
             productId: product._id,
             original_price: product.originalPrice,

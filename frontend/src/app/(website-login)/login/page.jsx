@@ -11,6 +11,7 @@ function LoginForm() {
     const params = useSearchParams();
     const router = useRouter();
     const dispatch = useDispatch();
+    const [error, seterror] = useState();
 
     const lsCart = JSON.parse(localStorage.getItem('cart'));
     const cart = lsCart ? lsCart.items : null;
@@ -65,14 +66,16 @@ function LoginForm() {
                         items: dbCart, final_total, original_total
                     }))
 
-
-
                     if (params.get("ref") === "checkout") {
                         router.push("/checkout")
                     } else {
                         router.push("/")
 
                     }
+                } 
+                else if (res.data.flag == 0) {
+                    seterror(res.data.msg)
+                  
                 }
             }
         ).catch(
@@ -83,13 +86,6 @@ function LoginForm() {
         )
 
     }
-
-
-
-
-
-
-
 
 
     return (
@@ -114,6 +110,7 @@ function LoginForm() {
                         placeholder="••••••••"
                         className="w-full px-4 py-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
                     />
+                    <span className='text-red-500'>{error}</span>
                     <div className="mt-1">
                         <a href="#" className="text-xs text-gray-500 hover:underline">Forget Password ?</a>
                     </div>

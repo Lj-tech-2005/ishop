@@ -51,24 +51,12 @@ export const cartSlice = createSlice({
             localStorage.setItem("cart", JSON.stringify(state));
         },
 
-        removetoCart: (state, action) => {
-            const { productId } = action.payload;
-            state.items = state.items.filter(i => i.productId !== productId);
+        // removetoCart: (state, action) => {
+        //     state.items = null,
+        //         state.final_total = 0,
+        //         state.original_total = 0
+        // },
 
-            // Recalculate totals
-            let originalTotal = 0;
-            let finalTotal = 0;
-
-            state.items.forEach(i => {
-                originalTotal += i.original_price * i.qty;
-                finalTotal += i.final_price * i.qty;
-            });
-
-            state.original_total = originalTotal;
-            state.final_total = finalTotal;
-
-            localStorage.setItem("cart", JSON.stringify(state));
-        },
 
 
            emptyCart: (state) => {
@@ -91,7 +79,7 @@ export const cartSlice = createSlice({
 });
 
 // Export actions
-export const { Additem,emptyCart, removetoCart, qtyhandler, lstocart } = cartSlice.actions;
+export const { Additem, emptyCart, removetoCart, qtyhandler, lstocart } = cartSlice.actions;
 
 // Export reducer
 export default cartSlice.reducer;

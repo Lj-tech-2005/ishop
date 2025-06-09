@@ -146,7 +146,7 @@ export default function Header() {
                             <div className="flex gap-2 items-center">
                                 <div className="bg-[#EBEEF6] text-2xl w-[40px] h-[40px] relative rounded-[20px] flex items-center justify-center">
                                     <MdShoppingCart />
-                                    <span className="bg-[#01A49E] rounded-[10px] text-white text-[11px] absolute bottom-[-8px] right-[-5px] flex items-center justify-center w-[20px] h-[20px]">{cart?.items.length}</span>
+                                    <span className="bg-[#01A49E] rounded-[10px] text-white text-[11px] absolute bottom-[-8px] right-[-5px] flex items-center justify-center w-[20px] h-[20px]">{cart?.items?.length ?? 0}</span>
                                 </div>
                                 <div className="text-left">
                                     <p className="text-[#666666] text-[11px] font-normal uppercase">cart</p>

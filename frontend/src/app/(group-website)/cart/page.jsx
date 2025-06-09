@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getproduct } from "@/app/library/api-call";
 import { qtyhandler, removetoCart } from "@/redux/features/cartSlice";
 import { useRouter } from "next/navigation";
+import { axiosApiInstance } from "@/app/library/helper";
 
 export default function CartPage() {
   const router = useRouter()
@@ -55,7 +56,33 @@ export default function CartPage() {
     );
   };
 
-  const handleQtyChange = (productId, flag, finalPrice, originalPrice) => {
+  const handleQtyChange = async (productId, flag, finalPrice, originalPrice) => {
+    const qtychange = flag === "inc" ? 1 : -1;
+
+
+
+    // Call the new quantity update API
+    if (user?.data) {
+      try {
+        await axiosApiInstance.post("cart/update-qty", {
+          userId: user?.data._id,
+          productId: productId, // ✅ Correct variable
+          qtychange: qtychange,       // ✅ This is fine if API expects increment/decrement
+        }).then(
+          (res) => {
+            console.log(res)
+          }
+        ).catch(
+          (er) => {
+            console.log(er)
+          }
+        )
+      } catch (error) {
+        console.error("Failed to update quantity:", error);
+      }
+    }
+
+    // Then update local Redux state
     dispatch(
       qtyhandler({
         productId,
@@ -65,6 +92,7 @@ export default function CartPage() {
       })
     );
   };
+
 
   if (loading) {
     return (
@@ -117,7 +145,7 @@ export default function CartPage() {
                           ${product.originalPrice}
                         </p>
                         <p className="text-red-500 font-bold text-lg">
-                          ${product.finalPrice}
+                          ${(product.finalPrice) * (item.qty)}
                         </p>
                         <p className="text-green-600 font-semibold text-sm">
                           ({product.discountPercentage}% OFF)
