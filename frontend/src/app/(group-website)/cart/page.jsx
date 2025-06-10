@@ -42,11 +42,33 @@ export default function CartPage() {
 
   }
 
+  const removehandler = async (item) => {
+
+    if (user?.data) {
+
+      try {
+
+        const response = await axiosApiInstance.post("cart/remove", {
+
+          userId: user?.data?._id,
+          productId: item.productId
+
+        });
+
+        if (response.data.flag == 1) {
+
+          console.log("Item removed from DB");
+        } else {
+          console.warn("DB removal failed:", response.data.msg);
+        }
 
 
+      } catch (error) {
+        console.error("Failed to remove from DB", error);
 
+      }
 
-  const removhandler = (item) => {
+    }
     dispatch(
       removetoCart({
         productId: item.productId,
@@ -197,7 +219,7 @@ export default function CartPage() {
                         {product.stock ? "In stock" : "Out of stock"}
                       </div>
                       <button
-                        onClick={() => removhandler(item)}
+                        onClick={() => removehandler(item)}
                         className="bg-red-300 px-2 rounded cursor-pointer"
                       >
                         remove

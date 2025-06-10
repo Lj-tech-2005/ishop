@@ -51,31 +51,45 @@ export const cartSlice = createSlice({
             localStorage.setItem("cart", JSON.stringify(state));
         },
 
-        // removetoCart: (state, action) => {
-        //     state.items = null,
-        //         state.final_total = 0,
-        //         state.original_total = 0
-        // },
+        removetoCart: (state, action) => {
+            const { productId } = action.payload;
 
+            const itemIndex = state.items.findIndex(item => item.productId === productId);
+            if (itemIndex !== -1) {
+                const item = state.items[itemIndex];
 
+                // Subtract that item's total from totals
+                state.final_total -= item.final_price * item.qty;
+                state.original_total -= item.original_price * item.qty;
 
-           emptyCart: (state) => {
-            state.items = null;
-            state.final_total = 0
-            state.original_total = 0;
-            localStorage.removeItem("cart");
+                // Remove the item
+                state.items.splice(itemIndex, 1);
+            }
 
+            localStorage.setItem("cart", JSON.stringify(state));
         },
 
-        lstocart: (state) => {
-            const lsCart = JSON.parse(localStorage.getItem("cart"));
-            if (lsCart) {
-                state.items = lsCart.items;
-                state.final_total = lsCart.final_total;
-                state.original_total = lsCart.original_total;
-            }
+
+
+
+
+    emptyCart: (state) => {
+        state.items = null;
+        state.final_total = 0
+        state.original_total = 0;
+        localStorage.removeItem("cart");
+
+    },
+
+    lstocart: (state) => {
+        const lsCart = JSON.parse(localStorage.getItem("cart"));
+        if (lsCart) {
+            state.items = lsCart.items;
+            state.final_total = lsCart.final_total;
+            state.original_total = lsCart.original_total;
         }
     }
+}
 });
 
 // Export actions

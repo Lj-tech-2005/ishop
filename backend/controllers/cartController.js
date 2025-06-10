@@ -70,34 +70,70 @@ const cartController = {
         }
     },
 
-  async updateqty(req, res) {
-  try {
-    const { userId, productId, qtychange } = req.body;
+    async updateqty(req, res) {
+        try {
+            const { userId, productId, qtychange } = req.body;
 
-    if (!userId || !productId || qtychange === undefined || qtychange === null) {
-      return res.status(400).send({ msg: "Missing required fields", flag: 0 });
+            if (!userId || !productId || qtychange === undefined || qtychange === null) {
+                return res.status(400).send({ msg: "Missing required fields", flag: 0 });
+            }
+
+            const existingItem = await CartModel.findOne({ user_id: userId, product_id: productId });
+
+            if (!existingItem) {
+                return res.status(404).json({ msg: "Cart item not found", status: 0 });
+            }
+
+            let newqty = existingItem.qty + qtychange;
+            if (newqty <= 0) {
+                newqty = 1;
+            }
+
+            existingItem.qty = newqty;
+            await existingItem.save();
+
+            return res.status(200).json({ msg: "Quantity updated", status: 1 });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ msg: "Internal server error", status: 0 });
+        }
+    },
+    async removeFromCart(req, res) {
+        try {
+            const { userId, productId } = req.body;
+
+            // Validate input
+            if (!userId || !productId) {
+                return res.status(400).json({ msg: "User ID and Product ID are required", flag: 0 });
+            }
+
+            // Delete the cart item
+            const deletedItem = await CartModel.findOneAndDelete({
+                user_id: userId,
+                product_id: productId,
+            });
+
+            if (!deletedItem) {
+                return res.status(404).json({ msg: "Cart item not found", flag: 0 });
+            }
+
+            // Fetch and populate updated cart
+            const updatedCart = await CartModel.find({ user_id: userId }).populate(
+                'product_id',
+                '_id finalPrice originalPrice discountPercentage thumbnail stock name'
+            );
+
+            return res.status(200).json({
+                msg: "Item removed from cart",
+                flag: 1,
+                cart: updatedCart,
+            });
+        } catch (error) {
+            console.error("Cart removal error:", error);
+            return res.status(500).json({ msg: "Internal Server Error", flag: 0 });
+        }
     }
 
-    const existingItem = await CartModel.findOne({ user_id: userId, product_id: productId });
-
-    if (!existingItem) {
-      return res.status(404).json({ msg: "Cart item not found", status: 0 });
-    }
-
-    let newqty = existingItem.qty + qtychange;
-    if (newqty <= 0) {
-      newqty = 1;
-    }
-
-    existingItem.qty = newqty;
-    await existingItem.save();
-
-    return res.status(200).json({ msg: "Quantity updated", status: 1 });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ msg: "Internal server error", status: 0 });
-  }
-}
 
 
 
