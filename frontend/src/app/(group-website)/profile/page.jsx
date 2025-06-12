@@ -188,7 +188,7 @@ export default function Profile() {
   const TabButton = ({ tabKey, label }) => (
     <button
       onClick={() => setActiveTab(tabKey)}
-      className={`w-full flex items-center justify-between px-4 py-2 text-sm font-medium rounded-lg transition ${activeTab === tabKey
+      className={`w-full flex items-center cursor-pointer justify-between px-4 py-2 text-sm font-medium rounded-lg transition ${activeTab === tabKey
         ? 'text-white bg-teal-500'
         : 'text-gray-700 bg-white border hover:bg-gray-100'
         }`}
@@ -285,7 +285,7 @@ export default function Profile() {
 
             <button
               onClick={handleUploadPhoto}  // ✅ अपलोड करने वाला फ़ंक्शन जो आपने backend से जोड़ा होगा
-              className="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition mb-4"
+              className="bg-teal-500 cursor-pointer hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg transition mb-4"
             >
               Upload Photo
             </button>
@@ -293,7 +293,7 @@ export default function Profile() {
             <h3 className="text-lg font-semibold">{user.name}</h3>
             <p className="text-sm text-gray-500 mb-6">{user?.email}</p>
 
-            <div className="space-y-3 w-full">
+            <div className="space-y-3  w-full">
               <TabButton tabKey="account" label="Account info" />
               <TabButton tabKey="order" label="My order" />
               <TabButton tabKey="address" label="My address" />
@@ -367,7 +367,7 @@ export default function Profile() {
 
                 <button
                   type="submit"
-                  className="mt-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-6 rounded-lg transition"
+                  className="mt-4 cursor-pointer bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-6 rounded-lg transition"
                 >
                   SAVE
                 </button>
@@ -482,7 +482,7 @@ export default function Profile() {
 
                   <button
                     type="submit"
-                    className="mt-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-6 rounded-lg transition"
+                    className="mt-4 cursor-pointer bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-6 rounded-lg transition"
                   >
                     Save Address
                   </button>
@@ -493,7 +493,7 @@ export default function Profile() {
                 <button
                   type="button"
                   onClick={addNewAddress}
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg"
+                  className="bg-gray-200 cursor-pointer hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg"
                 >
                   + Add New Address
                 </button>
@@ -553,7 +553,7 @@ export default function Profile() {
 
                 <button
                   type="submit"
-                  className="mt-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-6 rounded-lg transition"
+                  className="mt-4 cursor-pointer bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-6 rounded-lg transition"
                 >
                   Change Password
                 </button>

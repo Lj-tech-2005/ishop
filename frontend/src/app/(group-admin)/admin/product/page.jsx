@@ -40,8 +40,8 @@ const ProductTable = async () => {
                                         className="w-14 h-14 rounded-lg object-cover"
                                     />
                                 </td>
-                                <td className="px-4 py-3 font-medium whitespace-nowrap">{product.name}</td>
-                                <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{product.slug}</td>
+                                <td className="px-4 py-3 font-medium ">{product.name}</td>
+                                <td className="px-4 py-3 text-gray-600 ">{product.slug}</td>
                                 <td className="px-4 py-3 whitespace-nowrap">
                                     <div className="flex flex-col space-y-0.5 text-xs">
                                         <div className="text-gray-500">

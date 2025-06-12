@@ -21,14 +21,18 @@ const Productslug = async ({ params, searchParams }) => {
                     Product not found
                 </div>
             ) : (
-                <div className="grid max-w-[1360px] p-2  grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid max-w-[1360px] p-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {products.map((product) => (
-                        <div key={product._id} className="bg-white p-4">
-                            <div className="relative">
+                        <div
+                            key={product._id}
+                            className="bg-white p-4 rounded-xl shadow-md flex flex-col h-[480px] justify-between"
+                        >
+                            {/* Image Section */}
+                            <div className="relative w-full h-[220px]">
                                 <img
                                     src={`${process.env.NEXT_PUBLIC_API_BASE_URL}images/product/${product.thumbnail}`}
                                     alt={product.name}
-                                    className="w-full h-56 object-cover rounded-xl"
+                                    className="w-full h-full object-contain rounded-lg bg-gray-50"
                                 />
                                 {product.discountPercentage > 0 && (
                                     <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
@@ -37,18 +41,17 @@ const Productslug = async ({ params, searchParams }) => {
                                 )}
                             </div>
 
-                            <div className="mt-4 space-y-2">
-                                <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
+                            {/* Product Info */}
+                            <div className="flex flex-col flex-grow mt-4">
+                                <h3 className="text-base font-semibold text-gray-800 line-clamp-2 leading-tight">
+                                    {product.name}
+                                </h3>
 
-                                <p className="text-sm text-gray-500 flex items-center gap-1 truncate">
-                                    <FaTag className="text-gray-400" />
-                                    Category: {product.categoryId?.name}
-                                </p>
-
-                                <p className="text-sm text-gray-600 truncate">
+                                <p className="text-sm text-gray-600 line-clamp-2 mt-1">
                                     {product.shortDescription}
                                 </p>
 
+                                {/* Color Dots */}
                                 {product.colors?.length > 0 && (
                                     <div className="flex items-center gap-2 mt-2">
                                         {product.colors.map((color, idx) => (
@@ -62,22 +65,28 @@ const Productslug = async ({ params, searchParams }) => {
                                     </div>
                                 )}
 
-                                <div className="flex items-center gap-2 mt-2">
-                                    <span className="text-xl font-bold text-blue-600">
-                                        {product.finalPrice}
-                                    </span>
-                                    {product.originalPrice > product.finalPrice && (
-                                        <span className="text-sm line-through text-gray-400">
-                                            {product.originalPrice}
+                                {/* Price + Button */}
+                                <div className="mt-auto pt-4">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xl font-bold text-blue-600">
+                                            ₹{product.finalPrice}
                                         </span>
-                                    )}
-                                </div>
+                                        {product.originalPrice > product.finalPrice && (
+                                            <span className="text-sm line-through text-gray-400">
+                                                ₹{product.originalPrice}
+                                            </span>
+                                        )}
+                                    </div>
 
-                              <AddToCart product={product}/>
+                                    <div className="mt-2">
+                                        <AddToCart product={product} />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     ))}
                 </div>
+
             )}
         </div>
     );

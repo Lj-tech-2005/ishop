@@ -13,54 +13,70 @@ const productconntroller = {
 
     async create(req, res) {
         try {
-            if (!req.body.name || !req.body.slug) {
-                return res.send({ msg: "Please fill all the fields", flag: 0 })
+            const { name, slug } = req.body;
+
+            if (!name || !slug) {
+                return res.send({ msg: "Please fill all the required fields", flag: 0 });
             }
-            const thumbnail = req.files.thumbnail;
-            const image = genrateUniqueName(thumbnail.name);
-            const desntinationPath = `./public/images/product/${image}`;
-            thumbnail.mv(
-                desntinationPath,
-                async (err) => {
-                    if (err) {
-                        return res.send({ msg: "Unable to upload image", flag: 0 })
-                    } else {
-                        const findProduct = await productmodel.findOne({ name: req.body.name });
-                        if (findProduct) {
-                            return res.send({ msg: "Product already created", flag: 0 })
-                        }
 
-                        const product = new productmodel({
-                            ...req.body,
-                            thumbnail: image,
-                            colors: JSON.parse(req.body.colors)
-                        })
-                        product.save().then(() => {
-                            res.send({ msg: "Product created successfully", flag: 1 })
-                        }).catch((err) => {
-                            console.log(err)
-                            res.send({ msg: "Unable to create product", flag: 0, errmsg: err.message })
-                        })
+            const existingProduct = await productmodel.findOne({ name });
+            if (existingProduct) {
+                return res.send({ msg: "Product already exists", flag: 0 });
+            }
 
-                    }
+            const thumbnail = req.files?.thumbnail;
+            if (!thumbnail) {
+                return res.send({ msg: "Thumbnail image is required", flag: 0 });
+            }
 
+            // Clean optional fields
+            if (req.body.brandId === "") delete req.body.brandId;
+            if (req.body.categoryId === "") delete req.body.categoryId;
+
+            // Parse colors
+            if (!req.body.colors || req.body.colors === "[]" || req.body.colors === "") {
+                delete req.body.colors;
+            } else {
+                req.body.colors = JSON.parse(req.body.colors);
+            }
+
+            // Generate unique filename but DON'T move it yet
+            const imageName = genrateUniqueName(thumbnail.name);
+
+            // Create product object with image name (file not saved yet)
+            const product = new productmodel({
+                ...req.body,
+                thumbnail: imageName,
+            });
+
+            // 🧠 Save product to DB first
+            await product.save();
+
+            // ✅ If DB save successful, now move the image
+            const destPath = `./public/images/product/${imageName}`;
+            thumbnail.mv(destPath, (err) => {
+                if (err) {
+                    // Optional: Rollback product in DB if image fails
+                    productmodel.findByIdAndDelete(product._id).catch(() => { });
+                    return res.send({ msg: "Image upload failed. Product creation rolled back.", flag: 0 });
                 }
-            )
 
-
+                return res.send({ msg: "Product created successfully", flag: 1 });
+            });
 
         } catch (error) {
-            res.send({ msg: "Internal Server Error", flag: 0 })
-
+            console.error(error);
+            return res.send({ msg: "Internal Server Error", flag: 0, errmsg: error.message });
         }
-    },
+    }
+    ,
     async read(req, res) {
         try {
             const id = req.params.id;
 
             // Fetch single product by ID first
             if (id) {
-                const product = await productmodel.findById(id).populate(["categoryId", "colors","brandId"]);
+                const product = await productmodel.findById(id).populate(["categoryId", "colors", "brandId"]);
                 if (!product) {
                     return res.send({ msg: "Product not found", products: null, total: 0, flag: 1 });
                 }
@@ -104,7 +120,7 @@ const productconntroller = {
             const limit = req.query.limit ? parseInt(req.query.limit) : 0;
 
             // Fetch filtered products
-            const products = await productmodel.find(filterQuery).limit(limit).populate(["categoryId", "colors","brandId"]);
+            const products = await productmodel.find(filterQuery).limit(limit).populate(["categoryId", "colors", "brandId"]);
 
             // Response
             res.send({
@@ -261,80 +277,91 @@ const productconntroller = {
         }
 
     },
-    async update(req, res) {
-        try {
-            const id = req.params.id;
-            const {
-                name,
-                slug,
-                shortDescription,
-                longDescription,
-                originalPrice,
-                discountPercentage,
-                finalPrice,
-                categoryId,
-                colors,
-                brandId
-            } = req.body;
+  async update(req, res) {
+  try {
+    const id = req.params.id;
 
-            const file = req.files?.thumbnail;
+    // Clean brandId and categoryId (Empty string means remove)
+    if (req.body.brandId === "") delete req.body.brandId;
+    if (req.body.categoryId === "") delete req.body.categoryId;
 
-            const product = await productmodel.findById(id);
-            if (!product) {
-                return res.status(404).send({ msg: 'Product not found', flag: 0 });
-            }
-
-            let updatedData = {
-                name,
-                slug,
-                shortDescription,
-                longDescription,
-                originalPrice,
-                discountPercentage,
-                finalPrice,
-                categoryId,
-                brandId,
-                colors: JSON.parse(colors) // make sure to parse if sent as string
-            };
-
-            if (file) {
-                const imageName = genrateUniqueName(file.name);
-                const destination = `./public/images/product/${imageName}`;
-
-                file.mv(destination, async (err) => {
-                    if (err) {
-                        return res.status(500).send({ msg: 'Unable to upload image', flag: 0 });
-                    }
-
-                    // Delete old image
-                    const oldImagePath = `./public/images/product/${product.thumbnail}`;
-                    if (fs.existsSync(oldImagePath)) {
-                        try {
-                            fs.unlinkSync(oldImagePath);
-                        } catch (unlinkErr) {
-                            console.error('Failed to delete old image:', unlinkErr);
-                        }
-                    }
-
-                    updatedData.thumbnail = imageName;
-
-                    try {
-                        await productmodel.findByIdAndUpdate(id, updatedData);
-                        return res.send({ msg: 'Product updated successfully', flag: 1 });
-                    } catch (updateErr) {
-                        console.error(updateErr);
-                        return res.status(500).send({ msg: 'Unable to update product', flag: 0 });
-                    }
-                });
-            } else {
-                await productmodel.findByIdAndUpdate(id, updatedData);
-                return res.send({ msg: 'Product updated successfully', flag: 1 });
-            }
-        } catch (error) {
-            console.error(error);
-            res.status(500).send({ msg: 'Internal Server Error', flag: 0 });
-        }
+    // Clean colors
+    if (!req.body.colors || req.body.colors === "[]" || req.body.colors === "") {
+      delete req.body.colors;
+    } else {
+      req.body.colors = JSON.parse(req.body.colors);
     }
+
+    const {
+      name,
+      slug,
+      shortDescription,
+      longDescription,
+      originalPrice,
+      discountPercentage,
+      finalPrice,
+      categoryId,
+      colors,
+      brandId
+    } = req.body;
+
+    const product = await productmodel.findById(id);
+    if (!product) {
+      return res.status(404).send({ msg: 'Product not found', flag: 0 });
+    }
+
+    const file = req.files?.thumbnail;
+
+    const updatedData = {
+      name,
+      slug,
+      shortDescription,
+      longDescription,
+      originalPrice,
+      discountPercentage,
+      finalPrice,
+      categoryId,
+      brandId,
+      colors
+    };
+
+    if (file) {
+      const imageName = genrateUniqueName(file.name);
+      const destination = `./public/images/product/${imageName}`;
+
+      // Move file
+      await new Promise((resolve, reject) => {
+        file.mv(destination, (err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+
+      // Delete old thumbnail
+      if (product.thumbnail) {
+        const oldImagePath = `./public/images/product/${product.thumbnail}`;
+        if (fs.existsSync(oldImagePath)) {
+          try {
+            fs.unlinkSync(oldImagePath);
+          } catch (unlinkErr) {
+            console.error('Failed to delete old image:', unlinkErr);
+          }
+        }
+      }
+
+      updatedData.thumbnail = imageName;
+    }
+
+    await productmodel.findByIdAndUpdate(id, updatedData);
+    return res.send({ msg: 'Product updated successfully', flag: 1 });
+
+  } catch (error) {
+    console.error("Update product error:", error);
+    return res.status(500).send({ msg: 'Internal Server Error', flag: 0 });
+  }
+}
+
+
 
 
 }

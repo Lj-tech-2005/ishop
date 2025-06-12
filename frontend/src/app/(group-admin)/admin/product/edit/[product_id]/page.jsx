@@ -12,7 +12,7 @@ export default function eiditProduct({ params }) {
   const param = use(params)
   const productid = param?.product_id
 
-  
+
 
   const [category, setCategory] = useState();
   const [brand, setBrand] = useState();
@@ -90,25 +90,24 @@ export default function eiditProduct({ params }) {
         if (res.data.flag === 1) {
 
           e.target.reset()
-          description = ""
+          setdiscription("");
         }
       }
 
-    ).catch(
+    ).catch((err) => {
+      console.log("Update error:", err);
 
-      (err) => {
-
-        console.log(err)
-
+      if (err.response) {
+        console.log("Backend error:", JSON.stringify(err.response.data, null, 2));
+        notify(err.response.data.msg, 0); // यह यूज़र को error message दिखा देगा
+      } else {
+        console.log("Unexpected error:", JSON.stringify(err, null, 2));
+        notify("कुछ गलत हो गया", 0); // fallback message
       }
+    }
+
     )
-
-
-
   }
-
-
-
   useEffect(
     () => {
       fetchData()
@@ -318,7 +317,6 @@ export default function eiditProduct({ params }) {
               type="file"
               id="productImage"
               name="productImage"
-              required
               className="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-600 focus:border-blue-600 p-3"
             />
           </div>

@@ -18,8 +18,9 @@ export default async function layout({ children }) {
             <div className="max-w-[1360px] mx-auto mt-6">
                 {/* Breadcrumb */}
                 <div className="text-sm text-gray-500 p-6 w-full rounded-2xl bg-white mb-4">
-                    <span>Home</span> / <span>Shop</span> /{" "}
-                    <span className="font-semibold text-black">Top Cell Phones & Tablets</span>
+                    <span>Home</span> / 
+                    {/* <span>Store</span> /{" "} */}
+                    <span className="font-semibold text-black">Store</span>
                 </div>
 
                 {/* Section Title */}
@@ -65,7 +66,7 @@ export default async function layout({ children }) {
                     </div>
                 </div>
             </div>
-            <main className="max-w-7xl mx-auto p-4">
+            <main className="max-w-7xl mx-auto pb-8">
                 <div className="p-6 bg-white rounded-xl shadow-sm">
                     <h2 className="text-xl font-semibold mb-6">POPULAR CATEGORIES</h2>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-6 gap-y-8">
@@ -104,7 +105,7 @@ export default async function layout({ children }) {
                         </Link>
 
                         <div>
-                            <h3 className="text-md font-semibold text-gray-700 mb-3">Cell Phones & Tablets</h3>
+                            {/* <h3 className="text-md font-semibold text-gray-700 mb-3">Cell Phones & Tablets</h3> */}
                             <ul className="space-y-2 text-sm text-gray-700">
                                 {catdata?.map((category, idx) => (
                                     <li key={idx}>

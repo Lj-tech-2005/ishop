@@ -17,7 +17,7 @@ const ColorList = async () => {
 
             <div className="flex justify-between items-center max-w-6xl mx-auto mb-6">
                 <h1 className="text-3xl font-bold  text-white">Color List</h1>
-                <Link href={"/admin/category/add"}>
+                <Link href={"/admin/color/add"}>
                     <button className="bg-amber-400 cursor-pointer text-black font-semibold px-5 py-2 rounded-lg shadow hover:bg-amber-500 transition">
                         + Add New Color
                     </button>

@@ -146,102 +146,123 @@ export default function ProdBtnGroup({ product }) {
 
 
 
+
+
 const ProductDetail = ({ product, onClose }) => {
-    return (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center">
-            <div className="bg-white max-w-2xl w-full rounded-2xl shadow-lg relative p-10 space-y-4 max-h-[90vh] overflow-y-auto overflow-x-hidden ">
-                {/* Close Button */}
-                <button
-                    onClick={onClose}
-                    className="absolute cursor-pointer top-4 right-4 text-gray-500 hover:text-red-500 transition"
-                >
-                    <FaTimesCircle className="w-6 h-6" />
-                </button>
+  return (
+    <div className="fixed inset-0 z-50 bg-white overflow-y-auto overflow-x-hidden">
+      {/* Close Button */}
+      <button
+        onClick={onClose}
+        className="fixed top-4 cursor-pointer right-4 text-gray-600 hover:text-red-500 z-10"
+      >
+        <FaTimesCircle className="w-6 h-6" />
+      </button>
 
-                {/* Thumbnail */}
-                {product.thumbnail && (
-                    <img
-                        src={`${process.env.NEXT_PUBLIC_API_BASE_URL}images/product/${product.thumbnail}`}
-                        alt={product.name}
-                        className="w-full h-64 object-cover rounded-lg"
-                    />
-                )}
+      {/* Page Container */}
+      <div className="w-full max-w-3xl mx-auto pt-16 px-4 pb-16 space-y-8 overflow-x-hidden">
+        {/* Thumbnail */}
+        {product.thumbnail && (
+          <div className="flex justify-center">
+            <img
+              src={`${process.env.NEXT_PUBLIC_API_BASE_URL}images/product/${product.thumbnail}`}
+              alt={product.name}
+              className="w-full max-w-md h-auto object-contain rounded-lg shadow"
+            />
+          </div>
+        )}
 
-                {/* Product Name & Slug */}
-                <div>
-                    <h2 className="text-2xl font-bold text-gray-800">{product.name}</h2>
-                    <p className="text-sm text-gray-500">Slug: {product.slug}</p>
-                </div>
-
-                {/* Price Info */}
-                <div className="space-y-1">
-                    <p><span className="font-semibold">Original Price:</span> ₹{product.originalPrice}</p>
-                    <p><span className="font-semibold">Discount:</span> {product.discountPercentage}%</p>
-                    <p><span className="font-semibold text-green-700">Final Price:</span> ₹{product.finalPrice}</p>
-                </div>
-
-                {/* Descriptions */}
-                <div>
-                    <p className="text-gray-700">
-                        <span className="font-semibold text-wrap">Short Description:</span> {product.shortDescription}
-                    </p>
-                    <div className="text-gray-700 mt-2">
-                        <p className="font-semibold">Long Description:</p>
-                        <div
-                            className="mt-1 prose prose-sm max-w-none break-words"
-                            dangerouslySetInnerHTML={{ __html: product.longDescription }}
-                        />
-                    </div>
-                </div>
-
-                {/* Stock & Colors */}
-                <div className="grid grid-cols-2 gap-4 mt-4">
-                    <div>
-                        <p><span className="font-semibold">Stock:</span> {product.stock ? 'Available' : 'Out of Stock'}</p>
-                    </div>
-                    <div>
-                        <p className='flex gap-6'>
-                            Colors:
-                            {
-                                product?.colors?.map((color,i) => {
-
-                                    return (
-
-                                        <span className='p-2' key={i} style={{ background: color.Hexcode }}></span>
-                                    )
-
-                                })
-                            }
-                        </p>
-                    </div>
-                    <div>
-                        <p><span className="font-semibold">Category:{product?.categoryId?.name}</span></p>
-                    </div>
-                     <div>
-                        <p><span className="font-semibold">Brand:{product?.brandId?.name}</span></p>
-                    </div>
-                </div>
-
-                {/* Gallery */}
-                {product.images?.length > 0 && (
-                    <div className="mt-4">
-                        <h3 className="font-semibold text-gray-800 mb-2">Gallery</h3>
-                        <div className="flex gap-2 overflow-x-auto">
-                            {product.images.map((img, i) => (
-                                <img
-                                    key={i}
-                                    src={`${process.env.NEXT_PUBLIC_API_BASE_URL}images/product/${img}`}
-                                    alt={`img-${i}`}
-                                    className="h-24 w-24 object-cover rounded-md border"
-                                />
-                            ))}
-                        </div>
-                    </div>
-                )}
-            </div>
+        {/* Product Name & Slug */}
+        <div className="text-center px-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 break-words whitespace-normal overflow-hidden max-w-full">
+            {product.name}
+          </h1>
+          <p className="text-sm text-gray-500 mt-1 break-words whitespace-normal overflow-hidden max-w-full">
+            Slug: {product.slug}
+          </p>
         </div>
-    );
-};
 
+        {/* Price Info */}
+        <div className="bg-gray-100 p-4 rounded-lg space-y-2 text-sm sm:text-base">
+          <p>
+            <span className="font-semibold">Original Price:</span> ₹{product.originalPrice}
+          </p>
+          <p>
+            <span className="font-semibold">Discount:</span> {product.discountPercentage}%
+          </p>
+          <p className="text-green-700 font-bold text-lg">
+            Final Price: ₹{product.finalPrice}
+          </p>
+          <p>
+            <span className="font-semibold">Stock:</span>{" "}
+            <span className={product.stock ? "text-green-600" : "text-red-600"}>
+              {product.stock ? "Available" : "Out of Stock"}
+            </span>
+          </p>
+        </div>
+
+        {/* Category & Brand */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm sm:text-base">
+          <p>
+            <span className="font-semibold">Category:</span> {product.categoryId?.name}
+          </p>
+          <p>
+            <span className="font-semibold">Brand:</span> {product.brandId?.name || "N/A"}
+          </p>
+        </div>
+
+        {/* Colors */}
+        {product.colors?.length > 0 && (
+          <div>
+            <p className="font-semibold mb-2">Colors:</p>
+            <div className="flex gap-2">
+              {product.colors.map((color, i) => (
+                <div
+                  key={i}
+                  className="w-6 h-6 rounded-full border shadow"
+                  style={{ backgroundColor: color.Hexcode }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Short Description */}
+        <div>
+          <p className="font-semibold">Short Description:</p>
+          <p className="text-gray-700 text-sm mt-1 break-words whitespace-pre-wrap">
+            {product.shortDescription}
+          </p>
+        </div>
+
+        {/* Long Description */}
+        <div>
+          <p className="font-semibold">Long Description:</p>
+          <div
+            className="prose prose-sm text-gray-700 max-w-none mt-1 break-words whitespace-pre-wrap"
+            dangerouslySetInnerHTML={{ __html: product.longDescription }}
+          />
+        </div>
+
+        {/* Gallery Images */}
+        {product.images?.length > 0 && (
+          <div>
+            <p className="font-semibold mb-2">Gallery:</p>
+            <div className="flex gap-3 overflow-x-auto pb-2">
+              {product.images.map((img, i) => (
+                <img
+                  key={i}
+                  src={`${process.env.NEXT_PUBLIC_API_BASE_URL}images/product/${img}`}
+                  alt={`img-${i}`}
+                  className="h-24 w-24 object-cover rounded-lg border"
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 
