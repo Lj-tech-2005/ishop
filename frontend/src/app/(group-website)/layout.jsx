@@ -3,6 +3,7 @@ import '../globals.css';
 import Header from "@/components/website/Header";
 import Footer from "@/components/website/Footer";
 import Storeprovider from "@/components/storeprovider";
+import { ToastContainer } from "react-toastify";
 
 
 const geistSans = Geist({
@@ -26,6 +27,9 @@ export default function RootLayout({ children }) {
       <Storeprovider>
         <body className="bg-[#E2E4EB]">
           <Storeprovider >
+            <ToastContainer
+              autoClose={1200}
+            />
             <Header />
             {children}
             <Footer />

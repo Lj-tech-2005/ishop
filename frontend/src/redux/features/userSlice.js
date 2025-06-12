@@ -11,7 +11,7 @@ export const userSlice = createSlice({
   reducers: {
     setUser: (state, { payload }) => {
       state.data = payload.data;
-      state.loginAt = new Date();
+      state.loginAt =new Date().toISOString();
       state.token = payload.token;
       localStorage.setItem("user", JSON.stringify(state));
     },
