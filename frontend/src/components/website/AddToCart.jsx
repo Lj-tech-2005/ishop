@@ -9,7 +9,7 @@ export default function AddToCart({ product }) {
     const dispatcher = useDispatch()
     const user = useSelector((state) => state.user?.data);
 
-     console.log(user,"my user")
+   
      
     function addcart() {
 

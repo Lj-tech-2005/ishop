@@ -1,11 +1,12 @@
 import { getproduct } from '@/app/library/api-call';
 import AddToCart from '@/components/website/addToCart';
-import { FaTag } from 'react-icons/fa';
+
 
 const ProductCard = async ({ searchParams }) => {
-    const response = await getproduct(null, null, searchParams?.color, searchParams?.limit, searchParams?.minPrice, searchParams?.maxPrice);
+    const response = await getproduct(null, null, searchParams?.color, searchParams?.limit, searchParams?.minPrice, searchParams?.maxPrice,searchParams?.brand);
     const products = response?.products || [];
 
+  
     return (
         <div className="max-w-[1360px] p-4">
             {products.length === 0 ? (

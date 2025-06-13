@@ -5,6 +5,7 @@ import ColorFilter from '@/components/website/ColorFilter';
 import ProdLimit from '@/components/website/ProdLimit';
 import PriceFilter from '@/components/website/PriceFilter';
 import Image from 'next/image';
+import BrandFilter from '@/components/website/BrandFilter';
 
 
 export default async function layout({ children }) {
@@ -18,7 +19,7 @@ export default async function layout({ children }) {
             <div className="max-w-[1360px] mx-auto mt-6">
                 {/* Breadcrumb */}
                 <div className="text-sm text-gray-500 p-6 w-full rounded-2xl bg-white mb-4">
-                    <span>Home</span> / 
+                    <span>Home</span> /
                     {/* <span>Store</span> /{" "} */}
                     <span className="font-semibold text-black">Store</span>
                 </div>
@@ -36,17 +37,15 @@ export default async function layout({ children }) {
                             className="rounded-lg shadow-md bg-center bg-cover h-[280px] md:h-[310px] col-span-1 md:col-span-2 relative text-white flex items-start justify-start p-6"
                             style={{ backgroundImage: "url('/storetop1.png')" }}
                         >
-                            <div className="bg-black/50 p-4 rounded-lg max-w-[80%]">
-                                <h3 className="text-2xl font-bold mb-1">Noise Cancelling</h3>
+                            <div className=" p-4 rounded-lg max-w-[80%]">
+                                <h3 className="text-3xl font-bold mb-1">Noise Cancelling</h3>
                                 <p className="text-lg mb-2">Headphone</p>
-                                <p className="text-sm mb-4">
+                                <p className="text-md-xl mb-4">
                                     Bose Over-Ear Headphone <br />
                                     Wifi, Voice Assistant, <br />
                                     Low Latency Game Mode
                                 </p>
-                                <button className="bg-white text-black px-4 py-2 rounded font-medium">
-                                    BUY NOW
-                                </button>
+
                             </div>
                         </div>
 
@@ -58,9 +57,7 @@ export default async function layout({ children }) {
                             <div className="bg-white/70 p-4 rounded-lg max-w-[80%]">
                                 <h3 className="text-xl font-semibold mb-1">redmi note 12 Pro+ 5g</h3>
                                 <p className="text-sm mb-4">Rise to the challenge</p>
-                                <button className="bg-black text-white px-4 py-2 rounded font-medium">
-                                    SHOP NOW
-                                </button>
+
                             </div>
                         </div>
                     </div>
@@ -95,7 +92,7 @@ export default async function layout({ children }) {
 
             <div className='w-full p-4 bg-white'>
                 <div className='md:grid grid-cols-5'>
-                    <div className="bg-[#EEEFF6] p-6 rounded-2xl w-full shadow-md">
+                    <div className="bg-[#EEEFF6] p-4 rounded-2xl w-full shadow-md">
                         <h2 className="text-xl font-bold text-gray-800 mb-6 tracking-wide">CATEGORIES</h2>
 
                         <Link href="/store">
@@ -122,8 +119,9 @@ export default async function layout({ children }) {
                         </div>
                         <ColorFilter />
                         <PriceFilter />
-                    </div>
 
+                        <BrandFilter />
+                    </div>
                     <div className='col-span-4'>
                         <ProdLimit />
                         {children}

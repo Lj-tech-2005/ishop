@@ -29,7 +29,7 @@ export default function AddProductForm() {
     setColor(colordata)
 
     const brandJSON = await getBrand();
-    const branddata = brandJSON?.brand;
+    const branddata = brandJSON?.brands;
     setBrand(branddata)
 
   }

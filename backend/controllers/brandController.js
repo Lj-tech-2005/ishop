@@ -1,7 +1,8 @@
 
 const { genrateUniqueName } = require("../helper");
 const brandmodel = require("../models/brandmodels");
-const fs = require("fs")
+const fs = require("fs");
+const productmodel = require("../models/productmodels ");
 
 const brandController = {
     async create(req, res) {
@@ -52,29 +53,49 @@ const brandController = {
         }
     },
     async read(req, res) {
-
         try {
-            let brand = null;
             const id = req.params.id;
+
+            // If ID is provided, return a single brand
             if (id) {
+                const brand = await brandmodel.findById(id);
+                if (!brand) {
+                    return res.status(404).send({ msg: "Brand not found", flag: 0 });
+                }
 
-                brand = await brandmodel.findById(id);
+                const productCount = await productmodel.countDocuments({ brandId: brand._id });
 
-            } else {
-
-                brand = await brandmodel.find()
-
+                return res.send({
+                    msg: "Brand found successfully",
+                    flag: 1,
+                    brand: {
+                        ...brand.toObject(),
+                        productCount
+                    }
+                });
             }
 
-            res.send({ msg: "brand find", flag: 1, brand });
+            // Otherwise, return all brands with product counts
+            const brands = await brandmodel.find().sort({ createdAt: -1 });
 
+            const data = await Promise.all(
+                brands.map(async (brand) => {
+                    const productCount = await productmodel.countDocuments({ brandId: brand._id });
+                    return {
+                        ...brand.toObject(),
+                        productCount
+                    };
+                })
+            );
+
+            res.send({ msg: "Brands found successfully", flag: 1, brands: data });
 
         } catch (error) {
-
-            res.status(500).send({ msg: 'Internal Server Error', flag: 0 });
+            console.error("Brand Read Error:", error);
+            res.status(500).send({ msg: "Internal Server Error", flag: 0 });
         }
-
-    },
+    }
+    ,
     async status(req, res) {
 
         try {

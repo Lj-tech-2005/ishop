@@ -2,6 +2,7 @@
 const { genrateUniqueName } = require("../helper");
 const productmodel = require("../models/productmodels ");
 const categorymodels = require("../models/categorymodels");
+const brandmodels = require("../models/brandmodels");
 const colormodels = require("../models/colormodels");
 const fs = require("fs");
 
@@ -93,6 +94,18 @@ const productconntroller = {
                     filterQuery.categoryId = category._id;
                 } else {
                     return res.send({ msg: "Category not found", products: [], total: 0, flag: 1 });
+                }
+            }
+
+            // brand filter
+           
+            if (req.query.brand) {
+            
+                const brand = await brandmodels.findOne({ slug: req.query.brand });
+                if (brand) {
+                    filterQuery.brandId = brand._id;
+                } else {
+                    return res.send({ msg: "brand not found", products: [], total: 0, flag: 1 });
                 }
             }
 
@@ -277,89 +290,89 @@ const productconntroller = {
         }
 
     },
-  async update(req, res) {
-  try {
-    const id = req.params.id;
+    async update(req, res) {
+        try {
+            const id = req.params.id;
 
-    // Clean brandId and categoryId (Empty string means remove)
-    if (req.body.brandId === "") delete req.body.brandId;
-    if (req.body.categoryId === "") delete req.body.categoryId;
+            // Clean brandId and categoryId (Empty string means remove)
+            if (req.body.brandId === "") delete req.body.brandId;
+            if (req.body.categoryId === "") delete req.body.categoryId;
 
-    // Clean colors
-    if (!req.body.colors || req.body.colors === "[]" || req.body.colors === "") {
-      delete req.body.colors;
-    } else {
-      req.body.colors = JSON.parse(req.body.colors);
-    }
+            // Clean colors
+            if (!req.body.colors || req.body.colors === "[]" || req.body.colors === "") {
+                delete req.body.colors;
+            } else {
+                req.body.colors = JSON.parse(req.body.colors);
+            }
 
-    const {
-      name,
-      slug,
-      shortDescription,
-      longDescription,
-      originalPrice,
-      discountPercentage,
-      finalPrice,
-      categoryId,
-      colors,
-      brandId
-    } = req.body;
+            const {
+                name,
+                slug,
+                shortDescription,
+                longDescription,
+                originalPrice,
+                discountPercentage,
+                finalPrice,
+                categoryId,
+                colors,
+                brandId
+            } = req.body;
 
-    const product = await productmodel.findById(id);
-    if (!product) {
-      return res.status(404).send({ msg: 'Product not found', flag: 0 });
-    }
+            const product = await productmodel.findById(id);
+            if (!product) {
+                return res.status(404).send({ msg: 'Product not found', flag: 0 });
+            }
 
-    const file = req.files?.thumbnail;
+            const file = req.files?.thumbnail;
 
-    const updatedData = {
-      name,
-      slug,
-      shortDescription,
-      longDescription,
-      originalPrice,
-      discountPercentage,
-      finalPrice,
-      categoryId,
-      brandId,
-      colors
-    };
+            const updatedData = {
+                name,
+                slug,
+                shortDescription,
+                longDescription,
+                originalPrice,
+                discountPercentage,
+                finalPrice,
+                categoryId,
+                brandId,
+                colors
+            };
 
-    if (file) {
-      const imageName = genrateUniqueName(file.name);
-      const destination = `./public/images/product/${imageName}`;
+            if (file) {
+                const imageName = genrateUniqueName(file.name);
+                const destination = `./public/images/product/${imageName}`;
 
-      // Move file
-      await new Promise((resolve, reject) => {
-        file.mv(destination, (err) => {
-          if (err) reject(err);
-          else resolve();
-        });
-      });
+                // Move file
+                await new Promise((resolve, reject) => {
+                    file.mv(destination, (err) => {
+                        if (err) reject(err);
+                        else resolve();
+                    });
+                });
 
-      // Delete old thumbnail
-      if (product.thumbnail) {
-        const oldImagePath = `./public/images/product/${product.thumbnail}`;
-        if (fs.existsSync(oldImagePath)) {
-          try {
-            fs.unlinkSync(oldImagePath);
-          } catch (unlinkErr) {
-            console.error('Failed to delete old image:', unlinkErr);
-          }
+                // Delete old thumbnail
+                if (product.thumbnail) {
+                    const oldImagePath = `./public/images/product/${product.thumbnail}`;
+                    if (fs.existsSync(oldImagePath)) {
+                        try {
+                            fs.unlinkSync(oldImagePath);
+                        } catch (unlinkErr) {
+                            console.error('Failed to delete old image:', unlinkErr);
+                        }
+                    }
+                }
+
+                updatedData.thumbnail = imageName;
+            }
+
+            await productmodel.findByIdAndUpdate(id, updatedData);
+            return res.send({ msg: 'Product updated successfully', flag: 1 });
+
+        } catch (error) {
+            console.error("Update product error:", error);
+            return res.status(500).send({ msg: 'Internal Server Error', flag: 0 });
         }
-      }
-
-      updatedData.thumbnail = imageName;
     }
-
-    await productmodel.findByIdAndUpdate(id, updatedData);
-    return res.send({ msg: 'Product updated successfully', flag: 1 });
-
-  } catch (error) {
-    console.error("Update product error:", error);
-    return res.status(500).send({ msg: 'Internal Server Error', flag: 0 });
-  }
-}
 
 
 

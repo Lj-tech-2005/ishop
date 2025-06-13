@@ -36,7 +36,7 @@ export default function eiditProduct({ params }) {
     setColor(colordata)
 
     const brandJSON = await getBrand();
-    const branddata = brandJSON?.brand;
+    const branddata = brandJSON?.brands;
     setBrand(branddata)
 
     const response = await getproduct(productid);
