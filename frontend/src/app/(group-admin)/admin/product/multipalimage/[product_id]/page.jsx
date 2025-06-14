@@ -1,67 +1,98 @@
 'use client'
-import { axiosApiInstance, notify } from "@/app/library/helper";
-import Link from "next/link";
-import { use } from "react";
 
+import { useEffect, useState } from 'react';
+import { axiosApiInstance, notify } from '@/app/library/helper';
+import { useParams } from 'next/navigation';
+import Image from 'next/image';
+import { getproduct } from '@/app/library/api-call';
 
+export default function ProductImageManager() {
+    const { product_id } = useParams();
+    const [images, setImages] = useState([]);
 
-export default function productPage({ params }) {
+    const fetchImages = async () => {
+        const response = await getproduct(product_id);
+        // setImages(response?.products?.images);
+        setImages(response?.products?.images)
+    };
 
-    const param = use(params)
-    const productid = param?.product_id
+    console.log(images, "image me")
+    useEffect(() => {
+        fetchImages();
+    }, []);
 
-    const submithandler = (e) => {
+    const handleUpload = async (e) => {
         e.preventDefault();
-
-        const formdata = new FormData();
-        for (let image of e.target.multiImage.files) {
-            formdata.append("images", image);
+        const formData = new FormData();
+        for (let file of e.target.multiImage.files) {
+            formData.append('images', file);
         }
 
-        axiosApiInstance.post(`product/multi-images/${productid}`,formdata).then(
+        const res = await axiosApiInstance.post(`/product/multi-images/${product_id}`, formData);
+        notify(res.data.msg, res.data.flag);
+        if (res.data.flag === 1) {
+            fetchImages();
+            e.target.reset();
+        }
+    };
 
-            (res) => {
-            
-                notify(res.data.msg, res.data.flag)
-                if (res.data.flag === 1) {
-                    e.target.reset()
-                }
+    const deleteImage = async (imgName) => {
+        if (!confirm('Are you sure you want to delete this image?')) return;
+
+        try {
+            const res = await axiosApiInstance.post(`/product/delete-image/${product_id}`, {
+                imageName: imgName,
+            });
+
+            notify(res.data.msg, res.data.flag);
+            if (res.data.flag === 1) {
+                setImages(images.filter((img) => img !== imgName));
             }
-        ).catch(
-            (err) => {
-                console.log(err)
-                notify("something went is wrong", 0)
-
-            }
-
-        )
-
+        } catch (err) {
+            console.error(err);
+            notify('Failed to delete image', 0);
+        }
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md space-y-6">
-                <h2 className="text-2xl font-semibold text-gray-800 text-center">Upload Image</h2>
-                <form onSubmit={submithandler} className="space-y-4">
-                    <div>
-                        <label className="block text-gray-600 mb-2">Choose an image</label>
-                        <input
-                            type="file"
-                            name="multiImage"
-                            multiple
-                            accept="image/*"
-                            className="w-full border border-gray-300 rounded-lg p-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+        <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow space-y-6">
+            <h2 className="text-2xl font-bold text-center">Manage Product Images</h2>
+
+            <form onSubmit={handleUpload} className="space-y-4">
+                <label className="block font-semibold text-gray-700">Upload Images:</label>
+                <input
+                    type="file"
+                    name="multiImage"
+                    multiple
+                    accept="image/*"
+                    className="w-full border border-gray-300 p-2 rounded"
+                />
+                <button
+                    type="submit"
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                >
+                    Upload
+                </button>
+            </form>
+
+            <div className="grid grid-cols-3 gap-4">
+                {images?.map((img, index) => (
+                    <div key={index} className="relative group">
+                        <Image
+                            src={`${process.env.NEXT_PUBLIC_API_BASE_URL}images/product/${img}`}
+                            alt={`Product Image ${index}`}
+                            width={200}
+                            height={150}
+                            className="rounded-lg border"
                         />
-                    </div>
-                    <div className="flex justify-between">
                         <button
-                            type="submit"
-                            className="px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
+                            onClick={() => deleteImage(img)}
+                            className="absolute top-1 cursor-pointer right-1 bg-red-600 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100"
                         >
-                            Save
+                            Delete
                         </button>
                     </div>
-                </form>
+                ))}
             </div>
         </div>
     );

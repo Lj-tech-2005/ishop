@@ -11,4 +11,5 @@ productrouter.delete("/delete/:id", productcontroller.delete);
 productrouter.patch("/status/:id", productcontroller.status);
 productrouter.post("/multi-images/:id",fileuploader({ createParentPath: true }),productcontroller.multiimages);
 productrouter.put("/update/:id",fileuploader({createParentPath:true}), productcontroller.update);
+productrouter.post('/delete-image/:id', productcontroller.deleteSingleImage);
 module.exports = productrouter;

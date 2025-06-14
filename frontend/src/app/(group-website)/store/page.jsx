@@ -1,12 +1,16 @@
 import { getproduct } from '@/app/library/api-call';
 import AddToCart from '@/components/website/addToCart';
+import Pagination from '@/components/website/Pagination';
 
 
 const ProductCard = async ({ searchParams }) => {
-    const response = await getproduct(null, null, searchParams?.color, searchParams?.limit, searchParams?.minPrice, searchParams?.maxPrice,searchParams?.brand);
+    const limit = parseInt(searchParams?.limit) || 12;
+    const page = parseInt(searchParams?.page) || 1;
+
+    const response = await getproduct(null, null, searchParams?.brand, searchParams?.color, limit, searchParams?.minPrice, searchParams?.maxPrice, page);
     const products = response?.products || [];
 
-  
+
     return (
         <div className="max-w-[1360px] p-4">
             {products.length === 0 ? (
@@ -84,6 +88,8 @@ const ProductCard = async ({ searchParams }) => {
 
 
             )}
+            <Pagination total={response?.total} limit={limit} />
+
         </div>
     );
 };

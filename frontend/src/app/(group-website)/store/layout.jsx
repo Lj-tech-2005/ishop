@@ -4,7 +4,6 @@ import Link from 'next/link';
 import ColorFilter from '@/components/website/ColorFilter';
 import ProdLimit from '@/components/website/ProdLimit';
 import PriceFilter from '@/components/website/PriceFilter';
-import Image from 'next/image';
 import BrandFilter from '@/components/website/BrandFilter';
 
 
@@ -12,7 +11,7 @@ export default async function layout({ children }) {
     const categoryJSON = await getCategory();
     const catdata = categoryJSON?.categorys;
 
-
+  
 
     return (
         <section className='bg-[#E2E4EB]'>
@@ -119,7 +118,6 @@ export default async function layout({ children }) {
                         </div>
                         <ColorFilter />
                         <PriceFilter />
-
                         <BrandFilter />
                     </div>
                     <div className='col-span-4'>

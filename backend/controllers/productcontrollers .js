@@ -75,7 +75,7 @@ const productconntroller = {
         try {
             const id = req.params.id;
 
-            // Fetch single product by ID first
+            // 1. Get product by ID
             if (id) {
                 const product = await productmodel.findById(id).populate(["categoryId", "colors", "brandId"]);
                 if (!product) {
@@ -84,10 +84,9 @@ const productconntroller = {
                 return res.send({ msg: "Product found", products: product, total: 1, flag: 1 });
             }
 
-            // Build filter query
+            // 2. Build filter
             const filterQuery = {};
 
-            // Category Filter
             if (req.query.category) {
                 const category = await categorymodels.findOne({ slug: req.query.category });
                 if (category) {
@@ -97,19 +96,15 @@ const productconntroller = {
                 }
             }
 
-            // brand filter
-           
             if (req.query.brand) {
-            
                 const brand = await brandmodels.findOne({ slug: req.query.brand });
                 if (brand) {
                     filterQuery.brandId = brand._id;
                 } else {
-                    return res.send({ msg: "brand not found", products: [], total: 0, flag: 1 });
+                    return res.send({ msg: "Brand not found", products: [], total: 0, flag: 1 });
                 }
             }
 
-            // Color Filter
             if (req.query.color) {
                 const color = await colormodels.findOne({ slug: req.query.color });
                 if (color) {
@@ -119,27 +114,32 @@ const productconntroller = {
                 }
             }
 
-            // Price Filter
             if (req.query.minPrice || req.query.maxPrice) {
                 const priceFilter = {};
                 if (req.query.minPrice) priceFilter.$gte = parseFloat(req.query.minPrice);
                 if (req.query.maxPrice) priceFilter.$lte = parseFloat(req.query.maxPrice);
-
-                // Make sure you’re filtering on correct field name (price or finalPrice)
                 filterQuery.finalPrice = priceFilter;
             }
 
-            // Limit handling
-            const limit = req.query.limit ? parseInt(req.query.limit) : 0;
+            // 3. Pagination logic
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 12;
+            const skip = (page - 1) * limit;
 
-            // Fetch filtered products
-            const products = await productmodel.find(filterQuery).limit(limit).populate(["categoryId", "colors", "brandId"]);
+            // 4. Get total matching count
+            const total = await productmodel.countDocuments(filterQuery);
 
-            // Response
+            // 5. Get paginated products
+            const products = await productmodel.find(filterQuery)
+                .skip(skip)
+                .limit(limit)
+                .populate(["categoryId", "colors", "brandId"]);
+
+            // 6. Return response
             res.send({
                 msg: "Product found",
                 products,
-                total: products.length,
+                total, // ✅ total matching count
                 flag: 1
             });
 
@@ -148,6 +148,7 @@ const productconntroller = {
             res.status(500).send({ msg: "Internal Server Error", flag: 0 });
         }
     }
+
 
     ,
     async status(req, res) {
@@ -372,7 +373,32 @@ const productconntroller = {
             console.error("Update product error:", error);
             return res.status(500).send({ msg: 'Internal Server Error', flag: 0 });
         }
+    },
+    async deleteSingleImage(req, res) {
+        try {
+            const id = req.params.id;
+            const { imageName } = req.body;
+
+            const product = await productmodel.findById(id);
+            if (!product) {
+                return res.send({ msg: "Product not found", flag: 0 });
+            }
+
+            const updatedImages = product.images.filter(img => img !== imageName);
+            await productmodel.findByIdAndUpdate(id, { images: updatedImages });
+
+            const imgPath = `./public/images/product/${imageName}`;
+            if (fs.existsSync(imgPath)) {
+                fs.unlinkSync(imgPath);
+            }
+
+            return res.send({ msg: "Image deleted successfully", flag: 1 });
+        } catch (error) {
+            console.log(error);
+            return res.send({ msg: "Internal server error", flag: 0 });
+        }
     }
+
 
 
 

@@ -75,7 +75,7 @@ const getBrand = async (id = null) => {
     )
 };
 
-const getproduct = async (id = null, category_slug = null, color = null, limit = 0, minPrice = null, maxPrice = null, brand = null) => {
+const getproduct = async (id = null, category_slug = null, brand = null, color = null, limit = 0, minPrice = null, maxPrice = null, page = 1) => {
     let API = "product";
 
     if (id) {
@@ -85,10 +85,10 @@ const getproduct = async (id = null, category_slug = null, color = null, limit =
     const query = new URLSearchParams();
 
     if (category_slug) query.append("category", category_slug);
+    if (brand) query.append("brand", brand);
     if (color) query.append("color", color);
     if (limit) query.append("limit", limit);
-    if (brand) query.append("brand", brand);
-
+      if (page) query.append("page", page);
     if (minPrice !== null) query.append("minPrice", minPrice);
     if (maxPrice !== null) query.append("maxPrice", maxPrice);
     // console.log(`API Request: ${API}?${query.toString()}`);

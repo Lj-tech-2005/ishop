@@ -18,6 +18,7 @@ export default function Header() {
     const user = useSelector((state) => state.user);
     const dispatcher = useDispatch()
     const [toggle, settoggle] = useState(false);
+    const [showPagesDropdown, setShowPagesDropdown] = useState(false);
 
     useEffect(() => {
         dispatcher(lstocart());
@@ -76,7 +77,34 @@ export default function Header() {
                             <Link href={"/"}>
                                 <li className="flex  items-center gap-1">Home</li>
                             </Link>
-                            <li className="flex items-center gap-1">Pages<IoIosArrowDown className="mt-1" /></li>
+                            {/* Dropdown Pages */}
+                            {/* Dropdown Pages with Hover Effect */}
+                            <div
+                                className="relative group"
+                                onMouseEnter={() => setShowPagesDropdown(true)}
+                                onMouseLeave={() => setShowPagesDropdown(false)}
+                            >
+                                <li className="cursor-pointer flex items-center gap-1 relative">
+                                    Pages <IoIosArrowDown className="mt-1" />
+                                </li>
+
+                                <ul className={`absolute top-6 left-0 z-30 w-48 bg-white rounded-md shadow-lg transition-all duration-300 border border-gray-100 ${showPagesDropdown ? "opacity-100 visible" : "opacity-0 invisible"
+                                    }`}>
+                                    <Link href="/profile">
+                                        <li className="px-5 py-2 hover:bg-gray-100 transition-all rounded-t-md">👤 Profile</li>
+                                    </Link>
+                                    <Link href="/about">
+                                        <li className="px-5 py-2 hover:bg-gray-100 transition-all">📘 About</li>
+                                    </Link>
+                                    <Link href="/contact">
+                                        <li className="px-5 py-2 hover:bg-gray-100 transition-all">📞 Contact</li>
+                                    </Link>
+                                    <Link href="/login">
+                                        <li className="px-5 py-2 hover:bg-gray-100 transition-all rounded-b-md">🔐 Login</li>
+                                    </Link>
+                                </ul>
+                            </div>
+
                             <Link href={"/store"}><li className="flex items-center gap-1">Store<IoIosArrowDown className="mt-1" /></li></Link>
 
                             <li>Contact</li>
@@ -106,7 +134,31 @@ export default function Header() {
                             <Link href={"/"}>
                                 <li className="flex cursor-pointer  items-center gap-1">Home</li>
                             </Link>
-                            <li className="flex items-center gap-1">Pages<IoIosArrowDown className="mt-1" /></li>
+                            <div
+                                className="relative group"
+                                onMouseEnter={() => setShowPagesDropdown(true)}
+                                onMouseLeave={() => setShowPagesDropdown(false)}
+                            >
+                                <li className="cursor-pointer flex items-center gap-1 relative">
+                                    Pages <IoIosArrowDown className="mt-1" />
+                                </li>
+
+                                <ul className={`absolute top-6 text-black  left-0 z-30 w-48 bg-white rounded-md shadow-lg transition-all duration-300 border border-gray-100 ${showPagesDropdown ? "opacity-100 visible" : "opacity-0 invisible"
+                                    }`}>
+                                    <Link href="/profile">
+                                        <li className="px-5 py-2 hover:bg-gray-100 transition-all rounded-t-md">👤 Profile</li>
+                                    </Link>
+                                    <Link href="/about">
+                                        <li className="px-5 py-2 hover:bg-gray-100 transition-all">📘 About</li>
+                                    </Link>
+                                    <Link href="/contact">
+                                        <li className="px-5 py-2 hover:bg-gray-100 transition-all">📞 Contact</li>
+                                    </Link>
+                                    <Link href="/login">
+                                        <li className="px-5 py-2 hover:bg-gray-100 transition-all rounded-b-md">🔐 Login</li>
+                                    </Link>
+                                </ul>
+                            </div>
                             <Link href={"/store"}><li className="flex items-center gap-1">Store<IoIosArrowDown className="mt-1" /></li></Link>
                             <li>Contact</li>
                         </ul>

@@ -1,16 +1,20 @@
 import { getproduct } from '@/app/library/api-call';
-import { FaTag } from 'react-icons/fa'
 import AddToCart from '@/components/website/addToCart';
+import Pagination from '@/components/website/Pagination';
 
 const Productslug = async ({ params, searchParams }) => {
+    const limit = parseInt(searchParams?.limit) || 12;
+    const page = parseInt(searchParams?.page) || 1;
   const response = await getproduct(
     null,
     params?.category_slug,
+    searchParams?.brand,
     searchParams?.color,
-    searchParams?.limit,
+    limit,
     searchParams?.minPrice,
     searchParams?.maxPrice,
-    searchParams?.brand
+    page
+   
 
   );
   const products = response?.products || [];
@@ -90,6 +94,7 @@ const Productslug = async ({ params, searchParams }) => {
         </div>
 
       )}
+      <Pagination total={response?.total} limit={limit} />
     </div>
   );
 };
